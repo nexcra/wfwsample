@@ -1,0 +1,973 @@
+/***************************************************************************************************
+*   이 소스는 ㈜비씨카드 소유입니다.
+*   이 소스를 무단으로 도용하면 법에 따라 처벌을 받을 수 있습니다.
+*   클래스명  : FrontAction
+*   작성자     : (주)미디어포스 조은미
+*   내용        : 로그인 액션
+*   적용범위  : Golf
+*   작성일자  : 2009-06-11
+************************** 수정이력 ****************************************************************
+* 커멘드구분자	변경일		변경자	변경내용
+* golfloung		20100601	임은혜	DM 영화이벤트 팝업창 사이즈 변경
+* golfloung		20110120 	이경희 	NH패밀리 추가
+* golfloung		20110401 	이경희  TM 구분 12, 13따른 이벤트 창 주석 해제
+* golfloung		20110422 	이경희  공용카드의 TOP골프카드 소지자에 따른 가입시 메세지 수정
+***************************************************************************************************/
+package com.bccard.golf.action.login;
+
+import java.io.IOException;
+import java.sql.Connection;
+import java.text.SimpleDateFormat;
+import java.util.Date;
+import java.util.GregorianCalendar;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+
+import javax.servlet.ServletException;
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+import javax.servlet.http.HttpSession;
+
+import com.bccard.golf.common.AppConfig;
+import com.bccard.golf.common.DispatchAction;
+import com.bccard.golf.common.GolfUserEtt;
+import com.bccard.golf.common.GolfUtil;
+import com.bccard.golf.common.SmsSendProc;
+import com.bccard.golf.common.login.CardInfoEtt;
+import com.bccard.golf.common.login.CardNhInfoEtt;
+import com.bccard.golf.common.loginAction.SessionUtil;
+import com.bccard.golf.dbtao.DbTaoDataSet;
+import com.bccard.golf.dbtao.DbTaoResult;
+import com.bccard.golf.dbtao.proc.event.GolfEvntMkMemberProc;
+import com.bccard.golf.dbtao.proc.event.tmMovie.GolfEvntTmMovieProc;
+import com.bccard.golf.jolt.JtProcess;
+import com.bccard.golf.user.entity.UcusrinfoEntity;
+import com.bccard.waf.common.BaseException;
+import com.bccard.waf.common.DateUtil;
+import com.bccard.waf.common.StrUtil;
+import com.bccard.waf.core.ActionResponse;
+import com.bccard.waf.core.RequestParser;
+import com.bccard.waf.core.WaContext;
+import com.bccard.waf.tao.TaoConnection;
+import com.bccard.waf.tao.TaoDataSet;
+import com.bccard.waf.tao.TaoResult;
+import com.bccard.waf.tao.jolt.JoltInput;
+import com.initech.eam.nls.CookieManager;
+
+/******************************************************************************
+* Golf
+* @author	(주)미디어포스 
+* @version	1.0 
+******************************************************************************/
+public class FrontAction  extends DispatchAction {
+	/**
+	 * 쇼핑몰 로그인    
+	 *  
+	 * @param context
+	 * @param request
+	 * @param response	
+	 * @return ActionResponse 
+	 * @throws IOException
+	 * @throws ServletException
+	 * @throws BaseException
+	 */
+
+	public static final String TITLE = "FrontAction";
+	
+	public ActionResponse frontLogin(WaContext context, HttpServletRequest request, HttpServletResponse response) throws IOException, ServletException, BaseException {
+		Connection con = null;
+		try {
+			RequestParser parser = context.getRequestParser("default", request, response);
+			Map paramMap = parser.getParameterMap();		
+			request.setAttribute("paramMap", paramMap);						
+		} catch (Throwable t) {
+			error(this.getClass().getName(), t);
+			throw new BaseException("SYSTEM_ERROR", null, t);
+		} finally {
+			try {
+				if (con != null)
+					con.close();
+			} catch (Throwable ignored) {
+			}
+		}
+		return getActionResponse(context, "default");
+	}
+	/**
+	 * Front loginCheck | 사용자 로그인 체크 
+	 * 
+	 * @param context
+	 * @param request
+	 * @param response
+	 * @return ActionResponse
+	 * @throws IOException
+	 * @throws ServletException
+	 * @throws BaseException 
+	 * 작업기록  
+	 * 2009.10.29 | 권영만 법인쪽 추가
+	 */
+	public ActionResponse frontLoginCheck(WaContext context, HttpServletRequest request, HttpServletResponse response) throws IOException, ServletException, BaseException {
+		TaoConnection 		con 		= null;
+		TaoResult rs = null;
+		String returnResult  = "";	// 리턴페이지 지정
+		String end_date = "";		// 유료회원기간 종료일
+
+debug("frontLoginCheck STEP1");
+		try {			
+			
+			System.out.print("## frontLoginCheck | 사용자 로그인 체크 시작  \n");
+			
+			RequestParser parser = context.getRequestParser("default", request, response);
+			Map paramMap = parser.getParameterMap();			
+			request.setAttribute("paramMap", paramMap);	
+			
+			con = context.getTaoConnection("dbtao",null);	
+			String title = "골프로그인";
+			String userid = "";
+			String golfCardYn = "N";		//골프카드 유무
+			String strCardJoinNo	= "";
+			String golfCardNhYn = "N";		//농협 골프카드 유무
+			String strCardNhType = "";		//농협 골프카드 종류	03:티타늄, 12:플래티늄, 48:패밀리카드
+			String tourBlackYn = "N";		//투어 블랙회원 여부
+			String tourJuminNo = "";		//투어 블랙회원 주민번호
+			
+			String vipCardYn 		= "N";		//Vip카드 소지 여부
+			String topGolfCardYn 	= "N";		//탑골프카드 소지 여부
+			String richCardYn 		= "N";		//Rich카드 소지 여부
+			String topGolfCardNo 	= "";
+			String golfCardCoYn 	=  "N";
+
+			String jbCardYn 	=  "N";        //전북은행 시그니쳐카드여부 
+			UcusrinfoEntity usrEntity = SessionUtil.getFrontUserInfo(request);
+			GolfUserEtt mbr = SessionUtil.getTopnUserInfo(request);
+			
+			if(usrEntity != null)
+			{
+				userid=usrEntity.getAccount();								
+			}
+			else
+			{
+				returnResult="08";
+				debug("## frontLoginCheck | usrEntity null \n");
+				
+				//sso 로그아웃
+				String sso_domain = com.initech.eam.nls.NLSHelper.getCookieDomain(request);
+				CookieManager.removeCookie("MEM_CLSS", sso_domain, response);
+				CookieManager.removeNexessCookie(sso_domain, response);
+				
+			}
+			
+			//골프카드 유무 체크
+			if (mbr != null) 
+			{	
+				List cardList = mbr.getCardInfoList();
+				CardInfoEtt cardInfo = new CardInfoEtt();
+				
+				if( cardList.size() > 0 )
+				{
+					cardInfo = (CardInfoEtt)cardList.get(0);
+					strCardJoinNo = cardInfo.getJoinNo();	// 제휴코드
+					golfCardYn = "Y";
+				}
+				
+				// 농협 골프카드 유무 체크List cardList = mbr.getCardInfoList(); 
+				List cardNhList = mbr.getCardNhInfoList();
+				CardNhInfoEtt cardNhInfo = new CardNhInfoEtt();
+				
+				if( cardNhList!=null && cardNhList.size() > 0 )
+				{ 
+					cardNhInfo = (CardNhInfoEtt)cardNhList.get(0);
+				 
+					if("02".equals(cardNhInfo.getCardGubun())){ 
+						if ( cardNhInfo.getCardType().trim().length() > 0 ){
+							strCardNhType = cardNhInfo.getCardType();	// 카드종류
+							golfCardNhYn = "Y";
+						}
+					}if("04".equals(cardNhInfo.getCardGubun())){ 
+						jbCardYn = "Y";
+						debug("## 전북은행 카드 소지.");	
+					}else if("01".equals(cardNhInfo.getCardGubun())){
+						tourBlackYn = "Y";
+						tourJuminNo = cardNhInfo.getJuminNo();
+					}else if("03".equals(cardNhInfo.getCardGubun())){
+						if ( cardNhInfo.getCardType().trim().length() > 0 ){
+							strCardNhType = cardNhInfo.getCardType();	// 카드종류
+							golfCardNhYn = "Y";
+						}
+						tourBlackYn = "Y";
+						tourJuminNo = cardNhInfo.getJuminNo();
+					}
+				}
+				
+				
+				//VIP카드 소지여부 체크 2010.09.14 권영만
+				String select_grade_no = StrUtil.isNull(mbr.getVipMaxGrade(), ""); // grade ==>  03:e-PT, 12:PT12, 30:다이아몬드, 91:인피니티
+				//if (select_grade_no.equals("30")) select_grade_no = "12";	
+												
+				try {
+					List cardVipList = mbr.getCardVipInfoList();								
+					if( cardVipList!=null && cardVipList.size() > 0 )
+					{
+						
+						if(!"00".equals(select_grade_no))	// 플래티넘 회원일 경우	
+						{
+							
+							for (int i = 0; i < cardVipList.size(); i++) 
+							{
+								
+								vipCardYn = "Y";
+								debug("## VIP카드 소지");	
+							}
+							
+							
+						}
+						else
+						{
+							vipCardYn = "N";
+							debug("## VIP플래티늄 회원 아님");						
+						}
+						
+						
+					
+					}
+					else
+					{
+						vipCardYn = "N";
+						debug("## VIP카드 소지 안함.");	
+					}
+				} catch(Throwable t) 
+				{
+					vipCardYn = "N";
+					debug("## VIP카드 체크 에러");	
+				}
+				
+				//탑골프카드 소지여부 체크				
+				try {
+					List topGolfCardList = mbr.getTopGolfCardInfoList();
+					CardInfoEtt cardInfoTopGolfEtt = new CardInfoEtt();
+					
+					if( topGolfCardList!=null && topGolfCardList.size() > 0 )
+					{
+						for (int i = 0; i < topGolfCardList.size(); i++) 
+						{
+							cardInfoTopGolfEtt = (CardInfoEtt)topGolfCardList.get(0);
+							topGolfCardNo = cardInfoTopGolfEtt.getCardNo();
+							
+							topGolfCardYn = "Y";
+							debug("## 탑골프카드 소지 회원 | topGolfCardNo : "+topGolfCardNo);
+						}
+						
+						golfCardCoYn = mbr.getGolfCardCoYn();
+					}
+					else
+					{
+						topGolfCardYn = "N";
+						debug("## 탑골프카드 미소지");					
+					}
+				} catch(Throwable t) 
+				{
+					topGolfCardYn = "N";
+					debug("## 탑골프카드 체크 에러");	
+				}
+				
+				//리치카드 소지여부 체크
+				try {
+					List richCardList = mbr.getRichCardInfoList();
+					if( richCardList!=null && richCardList.size() > 0 )
+					{
+						for (int i = 0; i < richCardList.size(); i++) 
+						{
+							
+							richCardYn = "Y";
+							debug("## 리치카드 소지 회원");
+						}
+					}
+					else
+					{
+						richCardYn = "N";
+						debug("## 리치카드 미소지");					
+					}
+				} catch(Throwable t) 
+				{
+					richCardYn = "N";
+					debug("## 리치카드 체크 에러");	
+				}
+
+				
+			}
+			System.out.print("## 신규제휴카드 여부 | ID : "+userid+" | VIP카드 : "+vipCardYn+" | 탑골프카드 : "+topGolfCardYn+" | 리치카드 : "+richCardYn+" \n");														
+			System.out.print("## 기존제휴카드 여부 | ID : "+userid+" | 기업은행카드 : "+golfCardYn+" | 기업제휴번호 : "+strCardJoinNo+" | 농협카드 : "+golfCardNhYn+"\n");
+				
+			String join_chnl = "";		// 가입경로
+			if(!"".equals(userid))
+			{				
+				TaoDataSet input = new DbTaoDataSet(title);
+				input.setObject("userEtt", usrEntity);
+				input.setString("golfCardYn", golfCardYn);
+				input.setString("strCardJoinNo", strCardJoinNo);
+				input.setString("golfCardNhYn", golfCardNhYn);
+				input.setString("strCardNhType", strCardNhType);
+				input.setString("tourBlackYn", tourBlackYn);
+				input.setString("tourJuminNo", tourJuminNo);
+				input.setString("vipCardYn", vipCardYn);
+				input.setString("topGolfCardYn", topGolfCardYn);
+				input.setString("topGolfCardNo", topGolfCardNo);
+				input.setString("richCardYn", richCardYn);
+				input.setString("golfCardCoYn", golfCardCoYn);
+				input.setString("golfCardCoYn", golfCardCoYn);
+				input.setString("jbCardYn", jbCardYn);
+				
+				String usrId = usrEntity.getAccount();
+				if(!"".equals(usrId) && usrId != null)
+				{
+				/////////////////////////////////////////////
+				// 로그인 로그정보 체크
+				/////////////////////////////////////////////				
+				rs = con.execute("login.GolfLoginLogInsProc",input); 
+
+				rs.next();
+				returnResult = rs.getString("RESULT");
+				end_date = rs.getString("end_date");
+				join_chnl = rs.getString("join_chnl");
+				System.out.print("## frontLoginCheck | 로그인 로그정보 체크 | ID : "+userid+" | returnResult : "+returnResult+"\n");
+				}
+			}
+			
+	        String returnUrlTrue = "";
+	        String resultMsg = "";
+	        String script = "";
+	        DbTaoResult mkMemberCheck =null;
+
+
+	    	String conSSO = (String) SessionUtil.getSessionAttribute(request, "conSSO");
+	        String jumpUrl = CookieManager.getCookieValue("GOLF_REQ_UURL", request );
+	        // 공통게시판에서 넘어오는 파라미터 정의
+	        String bbs = CookieManager.getCookieValue("bbs", request );
+	        String slsn_type_cd = CookieManager.getCookieValue("slsn_type_cd", request );
+	        String svod_clss = CookieManager.getCookieValue("svod_clss", request );
+	        String scoop_cp_cd = CookieManager.getCookieValue("scoop_cp_cd", request );
+	        String s_exec_type_cd = CookieManager.getCookieValue("s_exec_type_cd", request );
+	        String p_idx = CookieManager.getCookieValue("p_idx", request );
+			debug("=`=`=`=`=`=`=`=`=`=` jumpUrl => " + jumpUrl);
+			debug("=`=`=`=`=`=`=`=`=`=` returnResult => " + returnResult);
+			String orgActionKey = (String) SessionUtil.getSessionAttribute(request, "orgActionKey");
+			String orgUURL 		= (String) SessionUtil.getSessionAttribute(request, "UURL");
+			
+			System.out.print("## frontLoginCheck | 세션URL리턴값 | orgActionKey : "+orgActionKey+" | orgUURL : "+orgUURL+"\n");
+			
+			// app/golfloung/GolfTopGolfCardList.do :  
+
+			
+			/*returnResult join_frame2 
+			 * 00 : 로그인
+			 * 01 : TM 회원가입
+			 * 02 : 회원가입
+			 * 03 : 재가입 
+			 * 04 : 로그인불가 | 주민번호 존재하지 않는 경우
+			 * 05 : 로그인불가 | 개인/법인 이 아닌 다른권한을 가진 회원이 접속한 경우
+			 * 06 : 기업골드회원 가입동의 페이지
+			 * 07 : 기업골드회원 업데이트 회원 -> SMS 발신
+			 * 08 : 법인회원이면서 지정카드이외의 회원
+			 * 09 : 골프카드(나의알파)
+			 * 10 : 농협골프카드회원
+			 * 11 : 아이핀회원 주민등록번호 입력 페이지
+			 * 12 : 기업골드회원(가입)
+			 * 13 : 기업골드회원 기간연장 회원 -> SMS 발신
+			 * */
+			
+						
+			if("".equals(jumpUrl) || jumpUrl == null || "null".equals(jumpUrl))
+			{
+				jumpUrl = "golfIndex";															
+			}
+			
+			if (returnResult.equals("01")){			// TM 회원가입
+	        	returnUrlTrue = "GolfMemJoinTm.do";
+	        }else if (returnResult.equals("02")){		// 회원가입
+	        	returnUrlTrue = "GolfMemJoinNoCard.do";
+	        }else if (returnResult.equals("11")){		// 주민등록번호 입력 페이지
+	        	returnUrlTrue = "GolfMemBcJoinIpinForm.do?type=golf";
+	        }else if (returnResult.equals("06")){		// 기업골드회원 가입동의 페이지
+	        	returnUrlTrue = "GolfMemJoinEvt.do?type=ibkGold";
+	        }else if (returnResult.equals("15")){		// 신규가입/탈회회원 재가입 월회원등급 가입동의 페이지	        	
+	        	returnUrlTrue = "GolfMemMonth.do";	        	
+	        }else if (returnResult.equals("08")){		// 법인회원이면서 지정카드이외의 회원
+
+	        	resultMsg = "기업회원은 지정카드로 회원가입을 하신분만 사용이 가능하십니다." +
+	        				"\\n공용카드 소지자는 개인 회원으로 가입하여 주시기 바랍니다." +
+	        				"\\n(단 TOP골프카드 법인 공용카드 소지자는 법인회원으로 가입 가능합니다.)";	        	
+	        	script = "window.top.location.href='/app/golfloung/index.jsp';";
+	        	
+	        }else if (returnResult.equals("09")){		// 골프카드회원가입 2009.08.25 권영만 - 등급nO를 넘겨준다.
+
+	        	if("030698".equals(strCardJoinNo) || "031189".equals(strCardJoinNo) || "031176".equals(strCardJoinNo) )
+	        	{
+	        		returnUrlTrue = "GolfMemJoinCard.do?code=6";
+	        	}
+	        	else if("394033".equals(strCardJoinNo) )
+	        	{
+	        		returnUrlTrue = "GolfMemJoinCard.do?code=14";
+	        	}
+	        	else if("740276".equals(strCardJoinNo) || "740289".equals(strCardJoinNo) || "740292".equals(strCardJoinNo) )
+	        	{
+	        		returnUrlTrue = "GolfMemJoinCard.do?code=15";
+	        	}
+	        	else if(strCardJoinNo.equals(AppConfig.getDataCodeProp("Basic"))
+						||strCardJoinNo.equals(AppConfig.getDataCodeProp("Skypass"))
+						||strCardJoinNo.equals(AppConfig.getDataCodeProp("AsianaClub")) )
+	        	{
+	        		returnUrlTrue = "GolfMemJoinCard.do?code=20";
+	        	}
+	        	else
+	        	{
+	        		returnUrlTrue = "GolfMemJoinCard.do?code=5";
+	        	}
+	        	
+	        }else if (returnResult.equals("10")){		// 농협골프카드회원가입 2009.11.06 임은혜
+	        	
+	        	//03:티타늄, 12:플래티늄, 48:패밀리카드
+
+	        	if("03".equals(strCardNhType)){
+	        		
+	        		returnUrlTrue = "GolfMemJoinCardNh.do?code=8";	// 티타늄
+	        		
+	        	}else if("12".equals(strCardNhType)){
+	        		
+	        		returnUrlTrue = "GolfMemJoinCardNh.do?code=9";	// 플래티늄
+	        		
+	        	}else if("48".equals(strCardNhType)){ 
+	        		
+	        		returnUrlTrue = "GolfMemJoinCardNh.do?code=10";	// 패밀리카드
+	        		
+	        	}
+	        	
+	        	
+	        }else if (returnResult.equals("12")){		// 기업골드회원(가입)
+
+	        	returnUrlTrue = "GolfMemJoinCardNh.do?code=10";	// 기업골드회원
+	        	
+	        }else if (returnResult.equals("14")){ //골프회원테이블에 존재하는(탈회회원제외)  월회원등급 처리 분기 
+	        
+	         	returnUrlTrue = orgUURL;
+	        	        	
+	        }else if (returnResult.equals("00") || returnResult.equals("07") || returnResult.equals("13")){		// 로그인
+
+				// 문자 보내기 - 골프라운지 회원가입이 완료되었으며 00월 00일까지 서비스를 이용할 수 있습니다
+	        	if(returnResult.equals("07") || returnResult.equals("13")){
+					HashMap smsMap = new HashMap();
+					smsMap.put("ip", request.getRemoteAddr());
+					smsMap.put("sName", usrEntity.getName());
+					smsMap.put("sPhone1", usrEntity.getMobile1());
+					smsMap.put("sPhone2", usrEntity.getMobile2());
+					smsMap.put("sPhone3", usrEntity.getMobile3());
+
+					SimpleDateFormat fmt = new SimpleDateFormat("MM월 dd일");   
+					GregorianCalendar cal = new GregorianCalendar();
+			        cal.add(cal.MONTH, 2);
+			        Date edDate = cal.getTime();
+			        String strEdDate = fmt.format(edDate);	// 유료회원기간 종료일
+			        
+					String smsClss = "674";
+					//String message = "골프라운지 회원가입이 완료되었으며 "+strEdDate+"까지 서비스를 이용할 수 있습니다";
+
+					String message = "";
+		        	if(returnResult.equals("07")){
+		        		message = "골프라운지 Gold회원가입이 완료되었으며, "+strEdDate+"까지 서비스 이용 가능합니다.";
+		        	}else{
+		        		message = "IBK굿샷퍼레이드 이벤트로 유료가입일자가 "+end_date+"까지 2개월연장되었습니다.";
+		        	}
+
+					SmsSendProc smsProc = (SmsSendProc)context.getProc("SmsSendProc");
+					String smsRtn = smsProc.send(smsClss, smsMap, message);
+	        	}
+	        	if("join_frame2".equals(orgActionKey))
+	        	{
+	        		returnUrlTrue = orgUURL;
+	        	}
+	        	else
+	        	{
+	        		returnUrlTrue = jumpUrl+".do?bbs="+bbs+"&slsn_type_cd="+slsn_type_cd+"&svod_clss="+svod_clss+"&scoop_cp_cd="+scoop_cp_cd+"&s_exec_type_cd="+s_exec_type_cd+"&p_idx="+p_idx;
+
+	        	}
+				
+				DbTaoDataSet dataSet = new DbTaoDataSet(TITLE);
+
+				// TM회원 영화예매권 교부 이벤트 처리 시작 
+				dataSet.setString("tm_evt_no", "119");
+				dataSet.setString("userSocid", usrEntity.getSocid());
+				dataSet.setString("userAccount", usrEntity.getAccount());
+				
+				// 1) 메일을 클릭하고 들어왔을 경우 세션 체크
+				String currDate  = DateUtil.currdate("yyyyMMdd");
+				String isTmMovie = (String)request.getSession().getAttribute("isTmMovie");
+				
+				debug("GolfmemInsActn:::isTmMovie : " + isTmMovie + " / userSocid : " + usrEntity.getSocid());
+				if(isTmMovie == null){
+					isTmMovie = "N";
+				}
+				
+				if(isTmMovie.equals("Y") ){
+					
+					/*
+					if(join_chnl.equals("0103")){
+						// 카젠 TM SK 주유권
+						script = " window.open('GolfEvntTmSKInfoPop.do','tmInfo', 'width=539, height=294'); location.href='"+returnUrlTrue+"'" + script;
+						request.getSession().removeAttribute("isTmMovie");
+				
+					}else{*/
+				
+						//TM 영화 할인권 이벤트 START********************************************************************************
+						
+						// 2) TM회원인지 확인
+
+						String tm_join_chnl = "";
+						String tm_cupn_kind = "";
+						
+
+						GolfEvntTmMovieProc proc_tmMovie = (GolfEvntTmMovieProc)context.getProc("GolfEvntTmMovieProc");
+						DbTaoResult tmMovieTmCheck = (DbTaoResult) proc_tmMovie.isTmCheckLogin(context, request, dataSet);	
+						
+						if (tmMovieTmCheck != null && tmMovieTmCheck.isNext()) {
+							tmMovieTmCheck.first(); 
+							tmMovieTmCheck.next();
+							if(tmMovieTmCheck.getString("RESULT").equals("00")){
+								tm_join_chnl = tmMovieTmCheck.getString("JOIN_CHNL");
+								tm_cupn_kind = tmMovieTmCheck.getString("CUPN_KIND");
+							}
+							
+							if(tm_join_chnl.equals("11")){
+
+								// 카젠 TM SK 주유권
+								script = " window.open('GolfEvntTmSKInfoPop.do','tmInfo', 'width=539, height=294'); location.href='"+returnUrlTrue+"'" + script;
+								request.getSession().removeAttribute("isTmMovie");
+								
+							}else{
+								
+								// 20100731 이후 가입자는 SK주유권 그 이전은 영화 예매권
+								if(tm_cupn_kind.equals("SK")){
+									
+									// SK 주유권
+									script = " window.open('GolfEvntTmSKInfoPop.do','tmInfo', 'width=539, height=294'); location.href='"+returnUrlTrue+"'" + script;
+									request.getSession().removeAttribute("isTmMovie");
+									
+								}else{
+									
+									// 영화할인권
+									// 3) 이벤트 기간 체크
+									String from_date = "";
+									String to_date   = "";
+									
+									DbTaoResult tmMovieDateCheck = (DbTaoResult) proc_tmMovie.eventDateCheck(context, request, dataSet);
+									
+									if (tmMovieDateCheck != null && tmMovieDateCheck.isNext()) {
+										tmMovieDateCheck.first(); 
+										tmMovieDateCheck.next();
+										if(tmMovieDateCheck.getString("RESULT").equals("00")){
+											from_date = tmMovieDateCheck.getString("FROM_DATE");
+											to_date = tmMovieDateCheck.getString("TO_DATE");
+											debug("GolfmemInsActn:::from_date ~ to_date >>>>>>>>>>>>" + from_date + "~" + to_date + ",현재날짜 : "+ currDate);
+										}
+									}
+							
+									if((Integer.parseInt(from_date) <= Integer.parseInt(currDate)) && (Integer.parseInt(currDate) <= Integer.parseInt(to_date))){
+										
+										// 4) 쿠폰600(가변)개 소진시 이벤트 진행 하지 않음 
+										String tmEvtCntYn = (String) proc_tmMovie.eventCountYn(context, request, dataSet);		
+										debug("GolfmemInsActn:::tmEvtCntYn : " + tmEvtCntYn );			
+										if(tmEvtCntYn.equals("Y")){
+											
+											// 5) 영화예매권 지급여부 확인 - 1건 이상일경우
+											int useEvtCpnCnt = (int) proc_tmMovie.useEvtCpnCnt(context, request, dataSet);	
+											debug("GolfmemInsActn:::useEvtCpnCnt : " + useEvtCpnCnt );			
+											
+											if(useEvtCpnCnt>0){
+												// 5-1) 1건이상이면  인증번호 4개 다시 보여줌
+												script = " window.open('GolfEvntTmMovieCpnPop.do','tmCoupon', 'width=474, height=202'); location.href='"+returnUrlTrue+"'" + script;
+												
+											}else{
+												// 6) 모든조건을 충족했을 경우 이벤트 안내 팝업 띄움
+												script = " window.open('GolfEvntTmMovieInfoPop.do','tmInfo', 'width=539, height=695'); location.href='"+returnUrlTrue+"'" + script;
+											}		
+											
+											debug("GolfmemInsActn:::script : " + script + " / returnUrlTrue : " + returnUrlTrue );	
+											
+											request.getSession().removeAttribute("isTmMovie");
+							
+										} else {	// 4) 쿠폰600(가변)개 소진시 이벤트 진행 하지 않음  
+											request.getSession().removeAttribute("isTmMovie");
+										}
+							
+									} else {	// 3) 이벤트 기간 체크
+										request.getSession().removeAttribute("isTmMovie");
+									}
+								}
+							}
+							
+						}/*else {	// 2) TM회원인지 확인
+							//request.getSession().removeAttribute("isTmMovie");
+							
+							// DM 이벤트 회원 영화 할인권 교부 => e-champ 쿠폰 회원 'EVENTGL12345', 'EVENTECHAMP201007', 'EVENTLETTER08'
+							if((Integer.parseInt("20100501") <= Integer.parseInt(currDate)) && (Integer.parseInt(currDate) <= Integer.parseInt("20100930"))){	// 기간 체크
+								int cpMovieCheck = (int) proc_tmMovie.isCpCheckLogin(context, request, dataSet);
+								if(cpMovieCheck > 0){	// DM 이벤트 회원
+
+									// 4) 쿠폰600(가변)개 소진시 이벤트 진행 하지 않음 
+									String tmEvtCntYn = (String) proc_tmMovie.eventCountYn(context, request, dataSet);		
+									debug("GolfmemInsActn:::tmEvtCntYn : " + tmEvtCntYn );			
+									if(tmEvtCntYn.equals("Y")){
+										
+										// 5) 영화예매권 지급여부 확인 - 1건 이상일경우
+										int useEvtCpnCnt = (int) proc_tmMovie.useEvtCpnCnt(context, request, dataSet);	
+										debug("GolfmemInsActn:::useEvtCpnCnt : " + useEvtCpnCnt );			
+										
+										if(useEvtCpnCnt>0){
+											// 5-1) 1건이상이면  인증번호 4개 다시 보여줌
+											script = " window.open('GolfEvntTmMovieCpnPop.do','tmCoupon', 'width=474, height=202'); location.href='"+returnUrlTrue+"'" + script;
+											
+										}else{
+											// 6) 모든조건을 충족했을 경우 이벤트 안내 팝업 띄움
+											script = " window.open('GolfEvntTmMovieInfoPop.do','tmInfo', 'width=539, height=695'); location.href='"+returnUrlTrue+"'" + script;
+										}		
+										
+										debug("GolfmemInsActn:::script : " + script + " / returnUrlTrue : " + returnUrlTrue + " / Account : " + usrEntity.getAccount() );	
+										
+										request.getSession().removeAttribute("isTmMovie");
+						
+									} else {	// 4) 쿠폰600(가변)개 소진시 이벤트 진행 하지 않음  
+										request.getSession().removeAttribute("isTmMovie");
+									}
+								}else{	
+									request.getSession().removeAttribute("isTmMovie");
+								}// DM 이벤트 회원
+							}else{
+								request.getSession().removeAttribute("isTmMovie");
+							}// 기간 체크
+							
+						}*/	// 1) 메일을 클릭하고 들어왔을 경우 세션 체크					
+					//}	// TM회원 영화예매권 교부 이벤트 처리 종료
+					
+					//TM 영화 할인권 이벤트 END********************************************************************************
+				}
+				////////////////////////////////////////
+				// 2010.08.30 마케팅 회원여부------START//
+				GolfEvntMkMemberProc proc_mkMember = (GolfEvntMkMemberProc)context.getProc("GolfEvntMkMemberProc");
+				//1. 이벤트 기간 체크 
+				DbTaoResult mkMemberDateCheck = (DbTaoResult) proc_mkMember.eventDateCheck(context, request, dataSet);
+				String mk_from_date="";
+				String mk_to_date="";
+				
+				if (mkMemberDateCheck != null && mkMemberDateCheck.isNext()) {
+					//mkMemberDateCheck.first(); 
+					mkMemberDateCheck.next();
+					if(mkMemberDateCheck.getString("RESULT").equals("00")){
+						mk_from_date = mkMemberDateCheck.getString("FROM_DATE");
+						mk_to_date = mkMemberDateCheck.getString("TO_DATE");
+						debug("GolfmemInsActn:::from_date ~ to_date >>>>>>>>>>>>" + mk_from_date + "~" + mk_to_date + ",현재날짜 : "+ currDate);
+					}
+				}
+				//이벤트 기간이면
+				if((Integer.parseInt(mk_from_date) <= Integer.parseInt(currDate)) && (Integer.parseInt(currDate) <= Integer.parseInt(mk_to_date))){
+					//2. 마케팅 대상 회원이지 체크
+					dataSet.setString("to_date", mk_to_date);		// 시작날짜
+					dataSet.setString("from_date", mk_from_date);		// 종료날짜
+					mkMemberCheck = (DbTaoResult) proc_mkMember.isMkMember(context, request, dataSet);
+					
+					if (mkMemberCheck != null && mkMemberCheck.isNext()) {
+						//마케팅 대상 회원이면
+						mkMemberCheck.first(); 
+						mkMemberCheck.next();
+						if(mkMemberCheck.getString("RESULT").equals("00")){
+							debug("returnUrlTrue = " +returnUrlTrue);
+							script = " window.open('GolfEvntMkMemberPop.do','tmInfo', 'width=600, height=580'); location.href='"+returnUrlTrue+"'" + script;
+						}
+					}
+				}
+				// 2010.08.30 마케팅 회원여부------END//
+				//////////////////////////////////////
+
+	        }else if (returnResult.equals("03")){		// 탈퇴한 유료회원은 한달안에 재가입 안된다.
+	        	// 재가입 부분은 가입쪽에서 처리한다.
+				//script = "parent.location.href='http://ssodev.golfloung.com:9611/nls3/ssologout_golf.jsp';";
+	        	//returnUrlTrue = "GolfBkLoginActn.do";
+	        	//resultMsg = "가입하실 수 있는 기간이 아닙니다.";
+
+	        	returnUrlTrue = "GolfMemJoinNoCard.do?reJoin=Y";
+	        }else if (returnResult.equals("04")){		// 주민등록번호 없는 회원은 로그인 할 수 없다.
+	        	script = "parent.logOut('"+conSSO+"');";
+	        	resultMsg = "골프라운지 서비스는 개인회원만 이용가능합니다.";
+	        }else if (returnResult.equals("05")){		// 기업회원은 로그인 할 수 없다. || 기업회원중에서 BCDBA.TBENTPMEM 의 MEM_CLSS가 5,6 이 아닌 기업회원
+	        	script = "parent.logOut('"+conSSO+"');";
+	        	resultMsg = "골프라운지 서비스는 개인회원만 이용가능합니다.";
+	        }else if (returnResult.equals("788")){		// VIP 카드 가입페이지
+	        	
+	        	// VIP카드 소지자이지만 미결제고객들 탑골프부킹페이지 접근시에 결제 화면 노출 Skip 처리 2010.12.10 권영만
+	        	debug("## VIP카드 소지 , 화이트회원이지만 예외처리 페이지 체크");
+	        	if("/app/golfloung/GolfTopGolfCardList.do".equals(orgUURL) || "/app/golfloung/GolfTopGolfCardStatus.do".equals(orgUURL) || "/app/golfloung/GolfTopGolfCardNoticeList.do".equals(orgUURL) || "/app/golfloung/GolfTopGolfCardGuide.do".equals(orgUURL)  || "/app/golfloung/GolfRoundAfterList.do".equals(orgUURL)  )
+	        	{
+	        		debug("## VIP카드 소지 , 화이트회원이지만 예외처리 | orgUURL : "+orgUURL);
+	        		returnUrlTrue = orgUURL;
+	        	}
+	        	else
+	        	{
+	        		returnUrlTrue = "GolfMemVipCardJoin.do";
+	        	}
+	        	
+	        }else if (returnResult.equals("787")){		// VIP 카드 가입페이지
+	        	returnUrlTrue = "GolfMemVipCardAgreeJoin.do";
+	        }else if (returnResult.equals("786")){		// topGolf 가입페이지
+	        	returnUrlTrue = "GolfMemTopGolfCardJoin.do";
+	        }else if (returnResult.equals("785")){		// 리치카드 가입페이지
+	        	returnUrlTrue = "GolfMemRichCardJoin.do";
+	        }
+			
+			
+			if("join_frame2".equals(orgActionKey))
+        	{
+        		returnUrlTrue = orgUURL;
+        	}
+        	
+			
+			debug("## returnUrlTrue : "+returnUrlTrue);
+			
+			request.setAttribute("script", script);  
+			request.setAttribute("returnUrl", returnUrlTrue);
+			request.setAttribute("resultMsg", resultMsg); 
+		
+			
+
+		} catch (Throwable t) {
+			error(this.getClass().getName(), t);
+			throw new BaseException("SYSTEM_ERROR", null, t);  
+		} finally {
+			try {
+				if (con != null)
+					con.close();
+				//if (Ccon != null)
+				//	Ccon.close();
+			} catch (Throwable ignored) {
+			}
+		}
+		return getActionResponse(context, "default");
+	}	
+	/**
+	 * Front logout   
+	 * 
+	 * @param context
+	 * @param request
+	 * @param response
+	 * @return ActionResponse
+	 * @throws IOException
+	 * @throws ServletException
+	 * @throws BaseException
+	 */
+	public ActionResponse frontLogout(WaContext context, HttpServletRequest request, HttpServletResponse response) throws IOException, ServletException, BaseException {
+		RequestParser parser = context.getRequestParser("default", request, response);
+
+		String subpage_key = "default";
+		Map paramMap = new HashMap();
+		String site = parser.getParameter("site");
+		
+		String returnUrl = "http://sso1.golfloung.com/nls3/ssologout_golf.jsp";
+		String conSSO = (String) SessionUtil.getSessionAttribute(request, "conSSO");
+		
+		if(!GolfUtil.empty(conSSO)){
+			if(conSSO.equals("DEV")){
+				returnUrl = "http://ssodev.golfloung.com:9611/nls3/ssologout_golf.jsp";
+			} else if (conSSO.equals("SSO1")) {
+				returnUrl = "http://sso1.golfloung.com/nls3/ssologout_golf.jsp";
+			} else if (conSSO.equals("SSO2")) {
+				returnUrl = "http://sso2.golfloung.com/nls3/ssologout_golf.jsp";
+			} else {
+				returnUrl = "http://sso1.golfloung.com/nls3/ssologout_golf.jsp";
+			}
+		}
+		
+		//로그아웃시 세션 삭제 2009.10.31
+		HttpSession session = request.getSession(true);	 
+		session.setAttribute("actionKey", null); 
+		session.setAttribute("actnkey", null);
+		session.setAttribute("bbs", null); 
+		session.setAttribute("COEVNT_ENTITY", null);
+		session.setAttribute("conSSO", null);
+		session.setAttribute("FRONT_ENTITY", null);	
+		session.setAttribute("GOLF_ENTITY", null);
+		session.setAttribute("GOLF_REQ_UURL", null);	
+		session.setAttribute("isInterpark", null);	
+		session.setAttribute("message", null);	
+		session.setAttribute("orgActionKey", null);
+		session.setAttribute("p_idx", null);
+		session.setAttribute("ParameterManipulationProtectKey", null);	
+		session.setAttribute("PARM", null);
+		session.setAttribute("requestURI", null);	
+		session.setAttribute("s_exec_type_cd", null); 
+		session.setAttribute("scoop_cp_cd", null);
+		session.setAttribute("SESSION_USER", null);
+		session.setAttribute("slsn_type_cd", null);
+		session.setAttribute("svod_clss", null);
+		session.setAttribute("SYSID", null);
+		session.setAttribute("token", null);
+		session.setAttribute("UURL", null);   
+		//session.invalidate();	
+		
+		
+		debug("===========frontLogout============conSSO : " + conSSO);
+		debug("===========frontLogout============returnUrl : " + returnUrl);
+		
+		request.setAttribute("returnUrl", returnUrl);
+        request.setAttribute("paramMap", paramMap);
+
+		if(!"bc".equals(site)){
+			paramMap.put("site", site);
+			subpage_key = "golfMain";
+		}
+		return super.getActionResponse(context, subpage_key);
+	}	
+
+	/**
+	 * Front 그인 필요 화면 클릭시 뜨는 팝업 화면 화면  
+	 * 
+	 * @param context
+	 * @param request
+	 * @param response
+	 * @return ActionResponse
+	 * @throws IOException
+	 * @throws ServletException
+	 * @throws BaseException
+	 */
+	public ActionResponse loginCheckLY(WaContext context, HttpServletRequest request, HttpServletResponse response) throws IOException, ServletException, BaseException {
+		Connection con = null;
+		try {
+			RequestParser parser = context.getRequestParser("default", request, response);
+			Map paramMap = parser.getParameterMap();
+
+			String ipAddressInfo = (String)context.getUserDefineObject("ShopConfig", "IPADDRESS_INFO");			
+			String serverIp = "";
+			try{
+				serverIp = java.net.InetAddress.getLocalHost().getHostAddress();
+			}catch(Exception e){}
+
+			if(ipAddressInfo.trim().equals(serverIp)) paramMap.put("mainUrl", (String)context.getUserDefineObject("ShopConfig", "URL_DEV")); //개발서버 URL
+			else paramMap.put("mainUrl", (String)context.getUserDefineObject("ShopConfig", "URL_REAL"));	
+			
+			request.setAttribute("paramMap", paramMap);						
+
+		} catch (Throwable t) {
+			error(this.getClass().getName(), t);
+			throw new BaseException("SYSTEM_ERROR", null, t);
+		} finally {
+			try {
+				if (con != null)
+					con.close();
+			} catch (Throwable ignored) {
+			}
+		}
+		return getActionResponse(context, "default");
+	}
+	/**
+	 * 로그인 or 비회원주문 정보입력창
+	 * @param context
+	 * @param request
+	 * @param response
+	 * @return
+	 * @throws IOException
+	 * @throws ServletException
+	 * @throws BaseException
+	 */
+	public ActionResponse loginLY(WaContext context, HttpServletRequest request, HttpServletResponse response) throws IOException, ServletException, BaseException {	
+
+		RequestParser parser = context.getRequestParser("default", request, response);
+		Map paramMap = parser.getParameterMap();
+		
+		String ipAddressInfo = (String)context.getUserDefineObject("ShopConfig", "IPADDRESS_INFO");			
+		String serverIp = "";
+		try{
+			serverIp = java.net.InetAddress.getLocalHost().getHostAddress();
+		}catch(Exception e){}
+		if(ipAddressInfo.trim().equals(serverIp)) {			
+			paramMap.put("mainUrl", (String)context.getUserDefineObject("ShopConfig", "URL_DEV")); 					//개발서버 URL			
+		}else{
+			paramMap.put("mainUrl", (String)context.getUserDefineObject("ShopConfig", "URL_REAL"));				//운영서버 URL			
+		}
+
+		request.setAttribute("paramTopGnb", paramMap);
+		return getActionResponse(context, "default");
+	}
+	
+	/**
+	 * 로그인 약관동의 or 비회원주문 정보입력창
+	 * @param context
+	 * @param request
+	 * @param response
+	 * @return
+	 * @throws IOException
+	 * @throws ServletException
+	 * @throws BaseException
+	 */
+	public ActionResponse loginAgreeLY(WaContext context, HttpServletRequest request, HttpServletResponse response) throws IOException, ServletException, BaseException {	
+
+		RequestParser parser = context.getRequestParser("default", request, response);
+		Map paramMap = parser.getParameterMap();
+		
+		String ipAddressInfo = (String)context.getUserDefineObject("ShopConfig", "IPADDRESS_INFO");			
+		String serverIp = "";
+		try{
+			serverIp = java.net.InetAddress.getLocalHost().getHostAddress();
+		}catch(Exception e){}
+		if(ipAddressInfo.trim().equals(serverIp)) {			
+			paramMap.put("mainUrl", (String)context.getUserDefineObject("ShopConfig", "URL_DEV")); 					//개발서버 URL			
+		}else{
+			paramMap.put("mainUrl", (String)context.getUserDefineObject("ShopConfig", "URL_REAL"));				//운영서버 URL			
+		}
+
+		request.setAttribute("paramTopGnb", paramMap);
+		return getActionResponse(context, "default");
+	}		
+	
+	/***********************************************************************
+	 * 실적체크 로직
+	 **********************************************************************/
+	public double getSumMoney(String cardNo, String cardType, double sum,WaContext context, HttpServletRequest request, HttpServletResponse response)
+		throws ServletException, IOException, BaseException{
+
+		
+		JtProcess process = new JtProcess();
+		String joltServiceName = "BSNINPT";
+		String toDay  = DateUtil.currdate("yyyyMMdd");
+		
+		String toDate  = DateUtil.dateAdd('M', -1, toDay, "yyyyMMdd");
+		int datcount = DateUtil.getMonthlyDayCount(
+						Integer.parseInt(toDate.substring(0,4)),
+						Integer.parseInt(toDate.substring(4,6))); // 해당월의 말일
+		toDate = toDate.substring(0,6) + Integer.toString(datcount);
+		debug("toDate : " + toDate);
+		String fromDate =  DateUtil.dateAdd('M', -3, toDay, "yyyyMMdd");
+		fromDate = fromDate.substring(0,6) + "01";		
+
+		if(cardType.equals("1") || cardType.equals("3")){  //1:본인 3:법인지정
+			// 2008-10-13 수정
+			JoltInput entity = new JoltInput(joltServiceName);					
+			entity.setServiceName(joltServiceName);
+			entity.setString("fml_trcode", "MGA0100R1600");
+
+			TaoResult jout = null;
+
+			entity.setString("fml_arg1", cardNo);		// 번호: 개인:주민번호/기업:회원사회원번호/기업:카드번호				
+			entity.setString("fml_arg2", "3");			// 개인,기업구분: '1':주민번호(개인),'2':회원사회원번호(기업)'3':카드번호(기업)
+			entity.setString("fml_arg3", fromDate);		// 이용조회일_FROM, YYYYMMDD(기업한달)
+			entity.setString("fml_arg4", toDate);		// 이용조회일_TO, YYYYMMDD(기업한달)
+			entity.setString("fml_arg5", " ");			// ISP구분(1.ISP, 나머지 : SPACE)
+			entity.setString("fml_arg7", "1");			// 이전카드실적포함
+
+			jout = process.call(context, request, entity);
+
+			String rescode = jout.getString("fml_ret1");
+			
+				if ("0".equals(rescode)) {
+					sum = sum + jout.getDouble("fml_retd3") + jout.getDouble("fml_retd5");
+debug("sum_money### >> " + sum);
+			} 
+		}
+		return sum;
+	}
+}
+
