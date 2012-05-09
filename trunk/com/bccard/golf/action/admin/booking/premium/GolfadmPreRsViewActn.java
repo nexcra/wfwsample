@@ -1,0 +1,141 @@
+/***************************************************************************************************
+*   이 소스는 ㈜비씨카드 소유입니다.
+*   이 소스를 무단으로 도용하면 법에 따라 처벌을 받을 수 있습니다.
+*   클래스명  : admGrUpdFormActn
+*   작성자    : (주)미디어포스 임은혜
+*   내용      : 관리자 부킹 골프장 수정 폼
+*   적용범위  : golf
+*   작성일자  : 2009-05-19
+************************** 수정이력 ****************************************************************
+*    일자      버전   작성자   변경사항
+*
+***************************************************************************************************/
+package com.bccard.golf.action.admin.booking.premium;
+
+import java.io.IOException;
+import java.util.Calendar;
+import java.util.Map;
+
+import javax.servlet.ServletException;
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+
+import com.bccard.waf.common.BaseException;
+import com.bccard.waf.core.ActionResponse;
+import com.bccard.waf.core.RequestParser;
+import com.bccard.waf.core.WaContext;
+
+import com.bccard.golf.common.GolfActn;
+import com.bccard.golf.common.GolfException;
+import com.bccard.golf.common.BaseAction;
+import com.bccard.golf.dbtao.DbTaoDataSet;
+import com.bccard.golf.dbtao.DbTaoResult;
+import com.bccard.golf.dbtao.proc.admin.booking.GolfAdmBkBenefitTimesDaoProc;
+import com.bccard.golf.dbtao.proc.admin.booking.premium.*;
+
+/******************************************************************************
+* Golf
+* @author	(주)미디어포스
+* @version	1.0
+******************************************************************************/
+public class GolfadmPreRsViewActn extends GolfActn{
+	
+	public static final String TITLE = "관리자 부킹 골프장 수정 폼";
+
+	/***************************************************************************************
+	* 비씨탑포인트 관리자화면
+	* @param context		WaContext 객체. 
+	* @param request		HttpServletRequest 객체.  
+	* @param response		HttpServletResponse 객체. 
+	* @return ActionResponse	Action 처리후 화면에 디스플레이할 정보. 
+	***************************************************************************************/
+	
+	public ActionResponse execute(	WaContext context,	HttpServletRequest request,	HttpServletResponse response) throws IOException, ServletException, BaseException {
+
+		String subpage_key = "default";	
+		
+		// 00.레이아웃 URL 저장
+		String layout = super.getActionParam(context, "layout");
+		request.setAttribute("layout", layout);
+
+		try {
+			// 01.세션정보체크
+			int int_yr_done = 0;
+			int int_mo_done = 0;
+			String permission = "N";
+			String memGrade = "";
+			
+			// 02.입력값 조회		
+			RequestParser parser = context.getRequestParser(subpage_key, request, response);
+			Map paramMap = BaseAction.getParamToMap(request);
+			paramMap.put("title", TITLE);
+ 
+			// Request 값 저장
+			String rsvt_SQL_NO		= parser.getParameter("RSVT_SQL_NO", "");
+			String cdhd_id		= parser.getParameter("CDHD_ID", "");
+			long page_no		= parser.getLongParameter("page_no", 1L);			// 페이지번호
+			
+			// 03.Proc 에 던질 값 세팅 (Proc에 dataSet 형태의 배열(?)로 request값 또는 조회값을 던진다.)
+			
+			DbTaoDataSet dataSet = new DbTaoDataSet(TITLE);
+			dataSet.setString("RSVT_SQL_NO", rsvt_SQL_NO);
+			dataSet.setString("CDHD_ID",cdhd_id);
+			
+			// 04.실제 테이블(Proc) 조회  :: 상세보기(1건)
+			GolfadmPreRsViewDaoProc proc = (GolfadmPreRsViewDaoProc)context.getProc("GolfadmPreRsViewDaoProc");
+			DbTaoResult bkView = proc.execute(context, dataSet);
+			
+			// 04-1. Benefit 조회
+			GolfAdmBkBenefitTimesDaoProc benefit_proc = (GolfAdmBkBenefitTimesDaoProc)context.getProc("GolfAdmBkBenefitTimesDaoProc");
+			DbTaoResult benefit = benefit_proc.getPreBkBenefit(context, dataSet);
+			
+			if(benefit.isNext()){
+				benefit.next();
+				
+				int_yr_done = benefit.getInt("YR_DONE");
+				int_mo_done = benefit.getInt("MO_DONE");
+				permission = benefit.getString("PERMISSION");
+				memGrade = benefit.getString("MEMGRADE");
+			}
+			
+			paramMap.put("permission", permission);
+			paramMap.put("MEMGRADE", memGrade);
+			paramMap.put("YR_DONE", Integer.toString(int_yr_done));
+			paramMap.put("MO_DONE", Integer.toString(int_mo_done));
+			
+			// 04-2  하단 리스트조회 : 데이터 셋팅 
+			dataSet.setLong("page_no", 1L);
+			dataSet.setLong("record_size", 1L);
+			dataSet.setString("SCH_GR_SEQ_NO", "");
+			dataSet.setString("SCH_RSVT_YN", "");
+			dataSet.setString("SEARCH_YN","Y");
+			dataSet.setString("SCH_DATE", "");
+			dataSet.setString("SCH_DATE_ST", "");
+			dataSet.setString("SCH_DATE_ED", "");
+			dataSet.setString("SCH_TEXT", cdhd_id);
+			dataSet.setString("SCH_TYPE", "T1.CDHD_ID");
+			dataSet.setString("SORT", "0001");
+			dataSet.setString("LISTTYPE", "XLS");
+		
+			// 04-1  하단 리스트조회
+			GolfadmPreRsListDaoProc list = (GolfadmPreRsListDaoProc)context.getProc("GolfadmPreRsListDaoProc");
+			DbTaoResult listResult = (DbTaoResult) list.execute(context, request, dataSet);
+			
+					
+			paramMap.put("CDHD_ID", cdhd_id);
+			
+			
+			request.setAttribute("BkView", bkView);	
+			request.setAttribute("ListResult", listResult);
+			request.setAttribute("paramMap", paramMap); //모든 파라미터값을 맵에 담아 반환한다.			
+			
+		} catch(Throwable t) {
+			debug(TITLE, t);
+			//t.printStackTrace();
+			throw new GolfException(TITLE, t);
+		} 
+		
+		return super.getActionResponse(context, subpage_key);
+		
+	}
+}

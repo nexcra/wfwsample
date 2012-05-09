@@ -1,0 +1,18 @@
+    SELECT x.*, y.record_cnt, ROWNUM row_num
+    FROM (
+            SELECT a.memid, a.seq_no, a.point_clss, a.point_detl_cd,
+              a.point_memo, a.round_date, b.name
+            FROM bcdba.tbgfpoint a, bcdba.ucusrinfo b
+            WHERE a.round_date >= '20101201'
+              AND a.round_date <= '20101231'
+           AND a.point_clss = '50'
+           AND a.memid = b.memid(+)
+           ORDER BY a.round_date DESC
+   ) x, (
+           SELECT COUNT(*) record_cnt
+           FROM bcdba.tbgfpoint a
+           WHERE a.round_date >= '20101201'
+            AND a.round_date <= '20101231'
+            AND a.point_clss = '50'
+    ) y
+/
