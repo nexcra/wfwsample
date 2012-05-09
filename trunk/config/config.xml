@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="euc-kr"?>
+<resource>
+	<!-- 시스템 Document Root Directory -->
+	<property key="DOC_WEB_PATH">D:/my_loung_dev/workspace/bc_dev</property>
+	<property key="DOC_ROOT_PATH">D:/my_loung_dev/workspace/bc_dev/FILE</property>
+	<property key="MAP_URL_PATH">http://211.181.255.188</property>
+	
+
+	 <!-- 컨텐츠이미지저장디렉토리 -->
+    <property key="CONT_FILE_PATH">D:/my_loung_dev/workspace/bc_dev</property>
+    <property key="CONT_FILE_PATH_IMG">cont_img</property>
+    <property key="CONT_FILE_PATH_ATC">cont_atc</property>
+    <property key="CONT_FILE_PATH_TMP">cont_tmp</property>
+	<property key="CONT_IMG_PATH">D:/my_loung_dev/workspace/bc_dev/cont_img</property>
+
+
+	<!-- 컨텐츠첨부파일저장디렉토리 -->
+	<property key="CONT_ATC_PATH">D:/my_loung_dev/workspace/bc_dev/cont_atc</property>
+	
+	<!-- 컨텐츠첨부파일인시저장디렉토리 -->
+	<property key="CONT_TMP_PATH">D:/my_loung_dev/workspace/bc_dev/cont_tmp</property>
+
+	<!-- URL 에서 cont_img 디렉토리에 접근하기 위한 경로  -->
+    <property key="CONT_IMG_URL_MAPPING_DIR">http://develop.bccard.com:13300/golfloung/cont_img</property>
+
+
+	<!-- 테스트 게시판 저장 폴더 이 밑으로 추가하세요.-->
+	<property key="BK_GREEN">/bk_green</property>
+	<property key="BkGreen">/bk_green</property>
+
+</resource>
