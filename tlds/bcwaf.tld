@@ -1,0 +1,1115 @@
+<?xml version="1.0" encoding="EUC-KR" ?>
+<!DOCTYPE taglib
+	PUBLIC "-//Sun Microsystems, Inc.//DTD JSP Tag Library 1.1//EN"
+	"http://java.sun.com/j2ee/dtds/web-jsptaglib_1_1.dtd">
+
+
+<taglib>
+	<tlibversion>1.0</tlibversion>
+	<jspversion>1.1</jspversion>
+	<shortname>watrix</shortname>
+	<uri/>
+	<info>com.bccard.waf 에서 사용하는 커스텀 태그</info>
+
+	<!-- 템플릿 관련 시작 -->
+	<tag>
+		<name>put</name>
+		<tagclass>com.bccard.waf.tag.template.PutTag</tagclass>
+		<bodycontent>JSP</bodycontent>
+		<info>페이지위치 정의 및 삽입</info>
+		<attribute><name>name</name><required>true</required><rtexprvalue>true</rtexprvalue></attribute>
+		<attribute><name>content</name><required>false</required><rtexprvalue>true</rtexprvalue></attribute>
+		<attribute><name>datasrc</name><required>false</required><rtexprvalue>true</rtexprvalue></attribute>
+		<attribute><name>datafld</name><required>false</required><rtexprvalue>true</rtexprvalue></attribute>
+	</tag>
+
+	<tag>
+		<name>definition</name>
+		<tagclass>com.bccard.waf.tag.template.DefinitionTag</tagclass>
+		<bodycontent>JSP</bodycontent>
+		<info>템플릿삽입</info>
+		<attribute><name>source</name><required>false</required><rtexprvalue>true</rtexprvalue></attribute>
+		<attribute><name>datasrc</name><required>false</required><rtexprvalue>true</rtexprvalue></attribute>
+		<attribute><name>datafld</name><required>false</required><rtexprvalue>true</rtexprvalue></attribute>
+	</tag>
+	<!-- 템플릿 관련 종료 -->
+
+	<!-- 레이아웃 관련 시작 -->
+	<tag>
+		<name>layout</name>
+		<tagclass>com.bccard.waf.tag.layout.LayoutTag</tagclass>
+		<bodycontent>JSP</bodycontent>
+		<info>레이아웃 설정</info>
+	</tag>
+
+	<tag>
+		<name>layoutReset</name>
+		<tagclass>com.bccard.waf.tag.layout.LayoutResetTag</tagclass>
+		<bodycontent>JSP</bodycontent>
+		<info>레이아웃 리셋</info>
+	</tag>
+
+	<tag>
+		<name>layoutReplace</name>
+		<tagclass>com.bccard.waf.tag.layout.LayoutReplaceStringTag</tagclass>
+		<bodycontent>JSP</bodycontent>
+		<info>레이아웃 문자열 변환</info>
+		<attribute><name>id</name><required>true</required><rtexprvalue>true</rtexprvalue></attribute>
+	</tag>
+
+	<tag>
+		<name>layoutContents</name>
+		<tagclass>com.bccard.waf.tag.layout.LayoutContentsTag</tagclass>
+		<bodycontent>JSP</bodycontent>
+		<info>레이아웃 내용작성</info>
+		<attribute><name>id</name><required>true</required><rtexprvalue>true</rtexprvalue></attribute>
+	</tag>
+
+	<tag>
+		<name>simpleTemplate</name>
+		<tagclass>com.bccard.waf.tag.template.SimpleTemplateTag</tagclass>
+		<bodycontent>JSP</bodycontent>
+		<info>간단한 템플릿 설정</info>
+		<attribute><name>id</name><required>true</required><rtexprvalue>true</rtexprvalue></attribute>
+	</tag>
+
+	<tag>
+		<name>simpleTemplateInsert</name>
+		<tagclass>com.bccard.waf.tag.template.SimpleTemplateInsertTag</tagclass>
+		<bodycontent>JSP</bodycontent>
+		<info>간단한 템플릿 표시</info>
+		<attribute><name>url</name><required>true</required><rtexprvalue>true</rtexprvalue></attribute>
+	</tag>
+
+	<tag>
+		<name>simpleTemplateDef</name>
+		<tagclass>com.bccard.waf.tag.template.SimpleTemplateDefTag</tagclass>
+		<bodycontent>JSP</bodycontent>
+		<info>간단한 템플릿 표시</info>
+		<attribute><name>url</name><required>true</required><rtexprvalue>true</rtexprvalue></attribute>
+	</tag>
+
+	<tag>
+		<name>simpleTemplatePut</name>
+		<tagclass>com.bccard.waf.tag.template.SimpleTemplatePutTag</tagclass>
+		<bodycontent>JSP</bodycontent>
+		<info>간단한 템플릿 표시</info>
+		<attribute><name>id</name><required>true</required><rtexprvalue>true</rtexprvalue></attribute>
+	</tag>
+
+	
+	<!-- 레이아웃 관련 종료 -->
+
+	<!-- core 시작 -->
+
+	<tag>
+		<name>useEntity</name>
+		<tagclass>com.bccard.waf.tag.core.UseEntityTag</tagclass>
+		<teiclass>com.bccard.waf.tag.UseSupportTei</teiclass>
+		<bodycontent>JSP</bodycontent>
+		<info>JSP 에 Entity 변수를 생성하기 위한 커스텀태그</info>
+		<attribute><name>id</name><required>true</required><rtexprvalue>true</rtexprvalue></attribute>
+		<attribute><name>class</name><required>false</required><rtexprvalue>true</rtexprvalue></attribute>
+		<attribute><name>type</name><required>false</required><rtexprvalue>true</rtexprvalue></attribute>
+		<attribute><name>scope</name><required>false</required><rtexprvalue>true</rtexprvalue></attribute>
+		<attribute><name>name</name><required>false</required><rtexprvalue>true</rtexprvalue></attribute>
+	</tag>
+
+	<tag>
+		<name>useCollection</name>
+		<tagclass>com.bccard.waf.tag.core.UseCollectionTag</tagclass>
+		<teiclass>com.bccard.waf.tag.core.UseCollectionTei</teiclass>
+		<bodycontent>JSP</bodycontent>
+		<info>JSP 에 Entity를 담은 Collection 변수를 생성하고 루프를 돌기 위한 커스텀태그</info>
+		<attribute><name>id</name><required>true</required><rtexprvalue>true</rtexprvalue></attribute>
+		<attribute><name>type</name><required>false</required><rtexprvalue>true</rtexprvalue></attribute>
+		<attribute><name>scope</name><required>false</required><rtexprvalue>true</rtexprvalue></attribute>
+		<attribute><name>name</name><required>false</required><rtexprvalue>true</rtexprvalue></attribute>
+		<attribute><name>var</name><required>true</required><rtexprvalue>true</rtexprvalue></attribute>
+		<attribute><name>varStatus</name><required>false</required><rtexprvalue>true</rtexprvalue></attribute>
+		<attribute><name>begin</name><required>false</required><rtexprvalue>true</rtexprvalue></attribute>
+		<attribute><name>end</name><required>false</required><rtexprvalue>true</rtexprvalue></attribute>
+		<attribute><name>step</name><required>false</required><rtexprvalue>true</rtexprvalue></attribute>
+	</tag>
+
+	<tag>
+		<name>useTaoResult</name>
+		<tagclass>com.bccard.waf.tag.core.UseTaoResultTag</tagclass>
+		<teiclass>com.bccard.waf.tag.core.UseTaoResultTei</teiclass>
+		<bodycontent>JSP</bodycontent>
+		<info>JSP 에 TaoResult 변수를 생성하고 루프를 돌기 위한 커스텀태그</info>
+		<attribute><name>id</name><required>true</required><rtexprvalue>true</rtexprvalue></attribute>
+		<attribute><name>type</name><required>false</required><rtexprvalue>true</rtexprvalue></attribute>
+		<attribute><name>scope</name><required>false</required><rtexprvalue>true</rtexprvalue></attribute>
+		<attribute><name>name</name><required>false</required><rtexprvalue>true</rtexprvalue></attribute>
+		<attribute><name>var</name><required>true</required><rtexprvalue>true</rtexprvalue></attribute>
+		<attribute><name>varStatus</name><required>false</required><rtexprvalue>true</rtexprvalue></attribute>
+		<attribute><name>begin</name><required>false</required><rtexprvalue>true</rtexprvalue></attribute>
+		<attribute><name>end</name><required>false</required><rtexprvalue>true</rtexprvalue></attribute>
+		<attribute><name>step</name><required>false</required><rtexprvalue>true</rtexprvalue></attribute>
+	</tag>
+
+	<tag>
+		<name>useRequestParser</name>
+		<tagclass>com.bccard.waf.tag.core.UseRequestParserTag</tagclass>
+		<bodycontent>JSP</bodycontent>
+		<info>메시지리소스에서 출력</info>
+		<attribute><name>name</name><required>true</required><rtexprvalue>true</rtexprvalue></attribute>
+		<attribute><name>requestCharset</name><required>false</required><rtexprvalue>true</rtexprvalue></attribute>
+	</tag>
+
+	<tag>
+		<name>setProperty</name>
+		<tagclass>com.bccard.waf.tag.core.SetPropertyTag</tagclass>
+		<bodycontent>EMPTY</bodycontent>
+		<info>Entity Setter 메쏘드 수행</info>
+		<attribute><name>name</name><required>true</required><rtexprvalue>true</rtexprvalue></attribute>
+		<attribute><name>property</name><required>true</required><rtexprvalue>true</rtexprvalue></attribute>
+		<attribute><name>param</name><required>false</required><rtexprvalue>true</rtexprvalue></attribute>
+		<attribute><name>value</name><required>false</required><rtexprvalue>true</rtexprvalue></attribute>
+	</tag>
+
+	<tag>
+		<name>varProperty</name>
+		<tagclass>com.bccard.waf.tag.core.VarPropertyTag</tagclass>
+		<teiclass>com.bccard.waf.tag.UseSupportTei</teiclass>
+		<bodycontent>JSP</bodycontent>
+		<info>Entity Getter 메쏘드 수행하여 변수 저장</info>
+		<attribute><name>id</name><required>true</required><rtexprvalue>true</rtexprvalue></attribute>
+		<attribute><name>type</name><required>true</required><rtexprvalue>true</rtexprvalue></attribute>
+		<attribute><name>datasrc</name><required>true</required><rtexprvalue>true</rtexprvalue></attribute>
+		<attribute><name>datafld</name><required>false</required><rtexprvalue>true</rtexprvalue></attribute>
+	</tag>
+
+	<tag>
+		<name>getProperty</name>
+		<tagclass>com.bccard.waf.tag.core.GetPropertyTag</tagclass>
+		<bodycontent>JSP</bodycontent>
+		<info>Entity Getter 메쏘드 수행</info>
+		<attribute><name>name</name><required>true</required><rtexprvalue>true</rtexprvalue></attribute>
+		<attribute><name>property</name><required>false</required><rtexprvalue>true</rtexprvalue></attribute>
+		<attribute><name>def</name><required>false</required><rtexprvalue>true</rtexprvalue></attribute>
+		<attribute><name>escapeXml</name><required>false</required><rtexprvalue>true</rtexprvalue></attribute>
+	</tag>
+
+	<tag>
+		<name>setFactor</name>
+		<tagclass>com.bccard.waf.tag.core.SetFactorTag</tagclass>
+		<bodycontent>JSP</bodycontent>
+		<info>Entity Setter 메쏘드 수행</info>
+		<attribute><name>datasrc</name><required>false</required><rtexprvalue>true</rtexprvalue></attribute>
+		<attribute><name>datafld</name><required>false</required><rtexprvalue>true</rtexprvalue></attribute>
+		<attribute><name>value</name><required>false</required><rtexprvalue>true</rtexprvalue></attribute>
+		<attribute><name>text</name><required>false</required><rtexprvalue>true</rtexprvalue></attribute>
+	</tag>
+
+	<tag>
+		<name>equalProperty</name>
+		<tagclass>com.bccard.waf.tag.core.IfPropertyTag</tagclass>
+		<bodycontent>JSP</bodycontent>
+		<info>Entity Getter 메쏘드 수행</info>
+		<attribute><name>name</name><required>true</required><rtexprvalue>true</rtexprvalue></attribute>
+		<attribute><name>property</name><required>true</required><rtexprvalue>true</rtexprvalue></attribute>
+		<attribute><name>escapeXml</name><required>false</required><rtexprvalue>true</rtexprvalue></attribute>
+		<attribute><name>value</name><required>false</required><rtexprvalue>true</rtexprvalue></attribute>
+		<attribute><name>comparesrc</name><required>false</required><rtexprvalue>true</rtexprvalue></attribute>
+		<attribute><name>comparefld</name><required>false</required><rtexprvalue>true</rtexprvalue></attribute>
+		<attribute><name>compare</name><required>false</required><rtexprvalue>true</rtexprvalue></attribute>
+	</tag>
+
+	<tag>
+		<name>getMessage</name>
+		<tagclass>com.bccard.waf.tag.core.GetMessageTag</tagclass>
+		<bodycontent>JSP</bodycontent>
+		<info>메시지리소스에서 출력</info>
+		<attribute><name>key</name><required>false</required><rtexprvalue>true</rtexprvalue></attribute>
+		<attribute><name>resourceScope</name><required>false</required><rtexprvalue>true</rtexprvalue></attribute>
+		<attribute><name>datasrc</name><required>false</required><rtexprvalue>true</rtexprvalue></attribute>
+		<attribute><name>datafld</name><required>false</required><rtexprvalue>true</rtexprvalue></attribute>
+		<attribute><name>def</name><required>false</required><rtexprvalue>true</rtexprvalue></attribute>
+		<attribute><name>escapeXml</name><required>false</required><rtexprvalue>true</rtexprvalue></attribute>
+	</tag>
+
+	<tag>
+		<name>useCodeList</name>
+		<tagclass>com.bccard.waf.tag.core.UseCodeListTag</tagclass>
+		<teiclass>com.bccard.waf.tag.core.UseCodeListTei</teiclass>
+		<bodycontent>JSP</bodycontent>
+		<info>JSP 에 Code변수를 생성하고 루프를 돌기 위한 커스텀태그</info>
+		<attribute><name>id</name><required>true</required><rtexprvalue>true</rtexprvalue></attribute>
+		<attribute><name>key</name><required>true</required><rtexprvalue>true</rtexprvalue></attribute>
+		<attribute><name>resourceScope</name><required>true</required><rtexprvalue>true</rtexprvalue></attribute>
+		<attribute><name>var</name><required>true</required><rtexprvalue>true</rtexprvalue></attribute>
+		<attribute><name>varStatus</name><required>false</required><rtexprvalue>true</rtexprvalue></attribute>
+		<attribute><name>begin</name><required>false</required><rtexprvalue>true</rtexprvalue></attribute>
+		<attribute><name>end</name><required>false</required><rtexprvalue>true</rtexprvalue></attribute>
+		<attribute><name>step</name><required>false</required><rtexprvalue>true</rtexprvalue></attribute>
+	</tag>
+
+	<tag>
+		<name>getCode</name>
+		<tagclass>com.bccard.waf.tag.core.GetCodeTag</tagclass>
+		<bodycontent>JSP</bodycontent>
+		<info>메시지리소스에서 출력</info>
+		<attribute><name>key</name><required>true</required><rtexprvalue>true</rtexprvalue></attribute>
+		<attribute><name>code</name><required>false</required><rtexprvalue>true</rtexprvalue></attribute>
+		<attribute><name>name</name><required>false</required><rtexprvalue>true</rtexprvalue></attribute>
+		<attribute><name>descLevel</name><required>false</required><rtexprvalue>true</rtexprvalue></attribute>
+		<attribute><name>resourceScope</name><required>false</required><rtexprvalue>true</rtexprvalue></attribute>
+		<attribute><name>datasrc</name><required>false</required><rtexprvalue>true</rtexprvalue></attribute>
+		<attribute><name>datafld</name><required>false</required><rtexprvalue>true</rtexprvalue></attribute>
+		<attribute><name>def</name><required>false</required><rtexprvalue>true</rtexprvalue></attribute>
+		<attribute><name>escapeXml</name><required>false</required><rtexprvalue>true</rtexprvalue></attribute>
+	</tag>
+
+	<tag>
+		<name>switchNumber</name>
+		<tagclass>com.bccard.waf.tag.core.SwitchNumberTag</tagclass>
+		<bodycontent>JSP</bodycontent>
+		<info>숫자 switch</info>
+		<attribute><name>datasrc</name><required>false</required><rtexprvalue>true</rtexprvalue></attribute>
+		<attribute><name>datafld</name><required>false</required><rtexprvalue>true</rtexprvalue></attribute>
+		<attribute><name>value</name><required>false</required><rtexprvalue>true</rtexprvalue></attribute>
+		<attribute><name>format</name><required>false</required><rtexprvalue>true</rtexprvalue></attribute>
+		<attribute><name>operationClass</name><required>false</required><rtexprvalue>true</rtexprvalue></attribute>
+	</tag>
+
+	<tag>
+		<name>switchNumberCase</name>
+		<tagclass>com.bccard.waf.tag.core.SwitchNumberCaseTag</tagclass>
+		<bodycontent>JSP</bodycontent>
+		<info>숫자 switch case</info>
+		<attribute><name>datasrc</name><required>false</required><rtexprvalue>true</rtexprvalue></attribute>
+		<attribute><name>datafld</name><required>false</required><rtexprvalue>true</rtexprvalue></attribute>
+		<attribute><name>value</name><required>false</required><rtexprvalue>true</rtexprvalue></attribute>
+		<attribute><name>format</name><required>false</required><rtexprvalue>true</rtexprvalue></attribute>
+		<attribute><name>operationClass</name><required>false</required><rtexprvalue>true</rtexprvalue></attribute>
+	</tag>
+
+	<tag>
+		<name>switchNumberElse</name>
+		<tagclass>com.bccard.waf.tag.core.SwitchNumberElseTag</tagclass>
+		<bodycontent>JSP</bodycontent>
+		<info>숫자 switch else</info>
+	</tag>
+
+	<tag>
+		<name>switchString</name>
+		<tagclass>com.bccard.waf.tag.core.SwitchStringTag</tagclass>
+		<bodycontent>JSP</bodycontent>
+		<info>문자 switch</info>
+		<attribute><name>datasrc</name><required>false</required><rtexprvalue>true</rtexprvalue></attribute>
+		<attribute><name>datafld</name><required>false</required><rtexprvalue>true</rtexprvalue></attribute>
+		<attribute><name>value</name><required>false</required><rtexprvalue>true</rtexprvalue></attribute>
+	</tag>
+
+	<tag>
+		<name>switchStringCase</name>
+		<tagclass>com.bccard.waf.tag.core.SwitchStringCaseTag</tagclass>
+		<bodycontent>JSP</bodycontent>
+		<info>문자 switch case</info>
+		<attribute><name>datasrc</name><required>false</required><rtexprvalue>true</rtexprvalue></attribute>
+		<attribute><name>datafld</name><required>false</required><rtexprvalue>true</rtexprvalue></attribute>
+		<attribute><name>value</name><required>false</required><rtexprvalue>true</rtexprvalue></attribute>
+	</tag>
+
+	<tag>
+		<name>switchStringElse</name>
+		<tagclass>com.bccard.waf.tag.core.SwitchStringElseTag</tagclass>
+		<bodycontent>JSP</bodycontent>
+		<info>문자 switch else</info>
+	</tag>
+
+	<!-- core 종료 -->
+
+
+	<!-- html 시작 -->
+	<tag>
+		<name>htmlJavascript</name>
+		<tagclass>com.bccard.waf.tag.html.HtmlJavascriptTag</tagclass>
+		<bodycontent>EMPTY</bodycontent>
+		<info>html 패키지 자바스크립트 액션 삽입</info>
+		<attribute><name>actionUrl</name><required>true</required><rtexprvalue>true</rtexprvalue></attribute>
+	</tag>
+
+	<tag>
+		<name>text</name>
+		<tagclass>com.bccard.waf.tag.html.TextTag</tagclass>
+		<bodycontent>empty</bodycontent>
+		<info>	</info>
+		<attribute><name>autotab</name><required>false</required><rtexprvalue>true</rtexprvalue></attribute>
+		<attribute><name>entertab</name><required>false</required><rtexprvalue>true</rtexprvalue></attribute>
+		<attribute><name>focusall</name><required>false</required><rtexprvalue>true</rtexprvalue></attribute>
+		<attribute><name>mode</name><required>false</required><rtexprvalue>true</rtexprvalue></attribute>
+
+		<attribute><name>name</name><required>true</required><rtexprvalue>true</rtexprvalue></attribute>
+		<attribute><name>value</name><required>false</required><rtexprvalue>true</rtexprvalue></attribute>
+		<attribute><name>disabled</name><required>false</required><rtexprvalue>true</rtexprvalue></attribute>
+		<attribute><name>readonly</name><required>false</required><rtexprvalue>true</rtexprvalue></attribute>
+		<attribute><name>size</name><required>false</required><rtexprvalue>true</rtexprvalue></attribute>
+		<attribute><name>maxlength</name><required>false</required><rtexprvalue>true</rtexprvalue></attribute>
+		<attribute><name>alt</name><required>false</required><rtexprvalue>true</rtexprvalue></attribute>
+		<attribute><name>usemap</name><required>false</required><rtexprvalue>true</rtexprvalue></attribute>
+		<attribute><name>ismap</name><required>false</required><rtexprvalue>true</rtexprvalue></attribute>
+		<attribute><name>tabindex</name><required>false</required><rtexprvalue>true</rtexprvalue></attribute>
+		<attribute><name>accesskey</name><required>false</required><rtexprvalue>true</rtexprvalue></attribute>
+		<attribute><name>onfocus</name><required>false</required><rtexprvalue>true</rtexprvalue></attribute>
+		<attribute><name>onblur</name><required>false</required><rtexprvalue>true</rtexprvalue></attribute>
+		<attribute><name>onselect</name><required>false</required><rtexprvalue>true</rtexprvalue></attribute>
+		<attribute><name>onchange</name><required>false</required><rtexprvalue>true</rtexprvalue></attribute>
+		<attribute><name>accept</name><required>false</required><rtexprvalue>true</rtexprvalue></attribute>
+		<attribute><name>datasrc</name><required>false</required><rtexprvalue>true</rtexprvalue></attribute>
+		<attribute><name>datafld</name><required>false</required><rtexprvalue>true</rtexprvalue></attribute>
+		<attribute><name>dataformatas</name><required>false</required><rtexprvalue>true</rtexprvalue></attribute>
+
+		<attribute><name>id</name><required>false</required><rtexprvalue>true</rtexprvalue></attribute>
+		<attribute><name>class</name><required>false</required><rtexprvalue>true</rtexprvalue></attribute>
+		<attribute><name>style</name><required>false</required><rtexprvalue>true</rtexprvalue></attribute>
+		<attribute><name>title</name><required>false</required><rtexprvalue>true</rtexprvalue></attribute>
+		<attribute><name>lang</name><required>false</required><rtexprvalue>true</rtexprvalue></attribute>
+		<attribute><name>dir</name><required>false</required><rtexprvalue>true</rtexprvalue></attribute>
+		<attribute><name>onclick</name><required>false</required><rtexprvalue>true</rtexprvalue></attribute>
+		<attribute><name>ondblclick</name><required>false</required><rtexprvalue>true</rtexprvalue></attribute>
+		<attribute><name>onmousedown</name><required>false</required><rtexprvalue>true</rtexprvalue></attribute>
+		<attribute><name>onmouseup</name><required>false</required><rtexprvalue>true</rtexprvalue></attribute>
+		<attribute><name>onmouseover</name><required>false</required><rtexprvalue>true</rtexprvalue></attribute>
+		<attribute><name>onmousemove</name><required>false</required><rtexprvalue>true</rtexprvalue></attribute>
+		<attribute><name>onmouseout</name><required>false</required><rtexprvalue>true</rtexprvalue></attribute>
+		<attribute><name>onkeypress</name><required>false</required><rtexprvalue>true</rtexprvalue></attribute>
+		<attribute><name>onkeydown</name><required>false</required><rtexprvalue>true</rtexprvalue></attribute>
+		<attribute><name>onkeyup</name><required>false</required><rtexprvalue>true</rtexprvalue></attribute>
+		<attribute><name>attributes</name><required>false</required><rtexprvalue>true</rtexprvalue></attribute>
+	</tag>
+
+	<tag>
+		<name>number</name>
+		<tagclass>com.bccard.waf.tag.html.NumberTag</tagclass>
+		<bodycontent>empty</bodycontent>
+		<info>	</info>
+		<attribute><name>autotab</name><required>false</required><rtexprvalue>true</rtexprvalue></attribute>
+		<attribute><name>entertab</name><required>false</required><rtexprvalue>true</rtexprvalue></attribute>
+		<attribute><name>focusall</name><required>false</required><rtexprvalue>true</rtexprvalue></attribute>
+		<attribute><name>pattern</name><required>false</required><rtexprvalue>true</rtexprvalue></attribute>
+
+		<attribute><name>name</name><required>true</required><rtexprvalue>true</rtexprvalue></attribute>
+		<attribute><name>value</name><required>false</required><rtexprvalue>true</rtexprvalue></attribute>
+		<attribute><name>disabled</name><required>false</required><rtexprvalue>true</rtexprvalue></attribute>
+		<attribute><name>readonly</name><required>false</required><rtexprvalue>true</rtexprvalue></attribute>
+		<attribute><name>size</name><required>false</required><rtexprvalue>true</rtexprvalue></attribute>
+		<attribute><name>maxlength</name><required>false</required><rtexprvalue>true</rtexprvalue></attribute>
+		<attribute><name>alt</name><required>false</required><rtexprvalue>true</rtexprvalue></attribute>
+		<attribute><name>usemap</name><required>false</required><rtexprvalue>true</rtexprvalue></attribute>
+		<attribute><name>ismap</name><required>false</required><rtexprvalue>true</rtexprvalue></attribute>
+		<attribute><name>tabindex</name><required>false</required><rtexprvalue>true</rtexprvalue></attribute>
+		<attribute><name>accesskey</name><required>false</required><rtexprvalue>true</rtexprvalue></attribute>
+		<attribute><name>onfocus</name><required>false</required><rtexprvalue>true</rtexprvalue></attribute>
+		<attribute><name>onblur</name><required>false</required><rtexprvalue>true</rtexprvalue></attribute>
+		<attribute><name>onselect</name><required>false</required><rtexprvalue>true</rtexprvalue></attribute>
+		<attribute><name>onchange</name><required>false</required><rtexprvalue>true</rtexprvalue></attribute>
+		<attribute><name>accept</name><required>false</required><rtexprvalue>true</rtexprvalue></attribute>
+		<attribute><name>datasrc</name><required>false</required><rtexprvalue>true</rtexprvalue></attribute>
+		<attribute><name>datafld</name><required>false</required><rtexprvalue>true</rtexprvalue></attribute>
+		<attribute><name>dataformatas</name><required>false</required><rtexprvalue>true</rtexprvalue></attribute>
+
+		<attribute><name>id</name><required>false</required><rtexprvalue>true</rtexprvalue></attribute>
+		<attribute><name>class</name><required>false</required><rtexprvalue>true</rtexprvalue></attribute>
+		<attribute><name>style</name><required>false</required><rtexprvalue>true</rtexprvalue></attribute>
+		<attribute><name>title</name><required>false</required><rtexprvalue>true</rtexprvalue></attribute>
+		<attribute><name>lang</name><required>false</required><rtexprvalue>true</rtexprvalue></attribute>
+		<attribute><name>dir</name><required>false</required><rtexprvalue>true</rtexprvalue></attribute>
+		<attribute><name>onclick</name><required>false</required><rtexprvalue>true</rtexprvalue></attribute>
+		<attribute><name>ondblclick</name><required>false</required><rtexprvalue>true</rtexprvalue></attribute>
+		<attribute><name>onmousedown</name><required>false</required><rtexprvalue>true</rtexprvalue></attribute>
+		<attribute><name>onmouseup</name><required>false</required><rtexprvalue>true</rtexprvalue></attribute>
+		<attribute><name>onmouseover</name><required>false</required><rtexprvalue>true</rtexprvalue></attribute>
+		<attribute><name>onmousemove</name><required>false</required><rtexprvalue>true</rtexprvalue></attribute>
+		<attribute><name>onmouseout</name><required>false</required><rtexprvalue>true</rtexprvalue></attribute>
+		<attribute><name>onkeypress</name><required>false</required><rtexprvalue>true</rtexprvalue></attribute>
+		<attribute><name>onkeydown</name><required>false</required><rtexprvalue>true</rtexprvalue></attribute>
+		<attribute><name>onkeyup</name><required>false</required><rtexprvalue>true</rtexprvalue></attribute>
+		<attribute><name>attributes</name><required>false</required><rtexprvalue>true</rtexprvalue></attribute>
+	</tag>
+
+	<tag>
+		<name>money</name>
+		<tagclass>com.bccard.waf.tag.html.MoneyTag</tagclass>
+		<bodycontent>empty</bodycontent>
+		<info>	</info>
+		<attribute><name>autotab</name><required>false</required><rtexprvalue>true</rtexprvalue></attribute>
+		<attribute><name>entertab</name><required>false</required><rtexprvalue>true</rtexprvalue></attribute>
+		<attribute><name>focusall</name><required>false</required><rtexprvalue>true</rtexprvalue></attribute>
+		<attribute><name>pattern</name><required>false</required><rtexprvalue>true</rtexprvalue></attribute>
+
+		<attribute><name>name</name><required>true</required><rtexprvalue>true</rtexprvalue></attribute>
+		<attribute><name>value</name><required>false</required><rtexprvalue>true</rtexprvalue></attribute>
+		<attribute><name>disabled</name><required>false</required><rtexprvalue>true</rtexprvalue></attribute>
+		<attribute><name>readonly</name><required>false</required><rtexprvalue>true</rtexprvalue></attribute>
+		<attribute><name>size</name><required>false</required><rtexprvalue>true</rtexprvalue></attribute>
+		<attribute><name>maxlength</name><required>false</required><rtexprvalue>true</rtexprvalue></attribute>
+		<attribute><name>alt</name><required>false</required><rtexprvalue>true</rtexprvalue></attribute>
+		<attribute><name>usemap</name><required>false</required><rtexprvalue>true</rtexprvalue></attribute>
+		<attribute><name>ismap</name><required>false</required><rtexprvalue>true</rtexprvalue></attribute>
+		<attribute><name>tabindex</name><required>false</required><rtexprvalue>true</rtexprvalue></attribute>
+		<attribute><name>accesskey</name><required>false</required><rtexprvalue>true</rtexprvalue></attribute>
+		<attribute><name>onfocus</name><required>false</required><rtexprvalue>true</rtexprvalue></attribute>
+		<attribute><name>onblur</name><required>false</required><rtexprvalue>true</rtexprvalue></attribute>
+		<attribute><name>onselect</name><required>false</required><rtexprvalue>true</rtexprvalue></attribute>
+		<attribute><name>onchange</name><required>false</required><rtexprvalue>true</rtexprvalue></attribute>
+		<attribute><name>accept</name><required>false</required><rtexprvalue>true</rtexprvalue></attribute>
+		<attribute><name>datasrc</name><required>false</required><rtexprvalue>true</rtexprvalue></attribute>
+		<attribute><name>datafld</name><required>false</required><rtexprvalue>true</rtexprvalue></attribute>
+		<attribute><name>dataformatas</name><required>false</required><rtexprvalue>true</rtexprvalue></attribute>
+
+		<attribute><name>id</name><required>false</required><rtexprvalue>true</rtexprvalue></attribute>
+		<attribute><name>class</name><required>false</required><rtexprvalue>true</rtexprvalue></attribute>
+		<attribute><name>style</name><required>false</required><rtexprvalue>true</rtexprvalue></attribute>
+		<attribute><name>title</name><required>false</required><rtexprvalue>true</rtexprvalue></attribute>
+		<attribute><name>lang</name><required>false</required><rtexprvalue>true</rtexprvalue></attribute>
+		<attribute><name>dir</name><required>false</required><rtexprvalue>true</rtexprvalue></attribute>
+		<attribute><name>onclick</name><required>false</required><rtexprvalue>true</rtexprvalue></attribute>
+		<attribute><name>ondblclick</name><required>false</required><rtexprvalue>true</rtexprvalue></attribute>
+		<attribute><name>onmousedown</name><required>false</required><rtexprvalue>true</rtexprvalue></attribute>
+		<attribute><name>onmouseup</name><required>false</required><rtexprvalue>true</rtexprvalue></attribute>
+		<attribute><name>onmouseover</name><required>false</required><rtexprvalue>true</rtexprvalue></attribute>
+		<attribute><name>onmousemove</name><required>false</required><rtexprvalue>true</rtexprvalue></attribute>
+		<attribute><name>onmouseout</name><required>false</required><rtexprvalue>true</rtexprvalue></attribute>
+		<attribute><name>onkeypress</name><required>false</required><rtexprvalue>true</rtexprvalue></attribute>
+		<attribute><name>onkeydown</name><required>false</required><rtexprvalue>true</rtexprvalue></attribute>
+		<attribute><name>onkeyup</name><required>false</required><rtexprvalue>true</rtexprvalue></attribute>
+		<attribute><name>attributes</name><required>false</required><rtexprvalue>true</rtexprvalue></attribute>
+	</tag>
+
+	<tag>
+		<name>date</name>
+		<tagclass>com.bccard.waf.tag.html.DateTag</tagclass>
+		<bodycontent>empty</bodycontent>
+		<info>	</info>
+		<attribute><name>autotab</name><required>false</required><rtexprvalue>true</rtexprvalue></attribute>
+		<attribute><name>entertab</name><required>false</required><rtexprvalue>true</rtexprvalue></attribute>
+		<attribute><name>focusall</name><required>false</required><rtexprvalue>true</rtexprvalue></attribute>
+		<attribute><name>pattern</name><required>false</required><rtexprvalue>true</rtexprvalue></attribute>
+		<attribute><name>toPattern</name><required>false</required><rtexprvalue>true</rtexprvalue></attribute>
+
+		<attribute><name>name</name><required>true</required><rtexprvalue>true</rtexprvalue></attribute>
+		<attribute><name>value</name><required>false</required><rtexprvalue>true</rtexprvalue></attribute>
+		<attribute><name>disabled</name><required>false</required><rtexprvalue>true</rtexprvalue></attribute>
+		<attribute><name>readonly</name><required>false</required><rtexprvalue>true</rtexprvalue></attribute>
+		<attribute><name>size</name><required>false</required><rtexprvalue>true</rtexprvalue></attribute>
+		<attribute><name>maxlength</name><required>false</required><rtexprvalue>true</rtexprvalue></attribute>
+		<attribute><name>alt</name><required>false</required><rtexprvalue>true</rtexprvalue></attribute>
+		<attribute><name>usemap</name><required>false</required><rtexprvalue>true</rtexprvalue></attribute>
+		<attribute><name>ismap</name><required>false</required><rtexprvalue>true</rtexprvalue></attribute>
+		<attribute><name>tabindex</name><required>false</required><rtexprvalue>true</rtexprvalue></attribute>
+		<attribute><name>accesskey</name><required>false</required><rtexprvalue>true</rtexprvalue></attribute>
+		<attribute><name>onfocus</name><required>false</required><rtexprvalue>true</rtexprvalue></attribute>
+		<attribute><name>onblur</name><required>false</required><rtexprvalue>true</rtexprvalue></attribute>
+		<attribute><name>onselect</name><required>false</required><rtexprvalue>true</rtexprvalue></attribute>
+		<attribute><name>onchange</name><required>false</required><rtexprvalue>true</rtexprvalue></attribute>
+		<attribute><name>accept</name><required>false</required><rtexprvalue>true</rtexprvalue></attribute>
+		<attribute><name>datasrc</name><required>false</required><rtexprvalue>true</rtexprvalue></attribute>
+		<attribute><name>datafld</name><required>false</required><rtexprvalue>true</rtexprvalue></attribute>
+		<attribute><name>dataformatas</name><required>false</required><rtexprvalue>true</rtexprvalue></attribute>
+
+		<attribute><name>id</name><required>false</required><rtexprvalue>true</rtexprvalue></attribute>
+		<attribute><name>class</name><required>false</required><rtexprvalue>true</rtexprvalue></attribute>
+		<attribute><name>style</name><required>false</required><rtexprvalue>true</rtexprvalue></attribute>
+		<attribute><name>title</name><required>false</required><rtexprvalue>true</rtexprvalue></attribute>
+		<attribute><name>lang</name><required>false</required><rtexprvalue>true</rtexprvalue></attribute>
+		<attribute><name>dir</name><required>false</required><rtexprvalue>true</rtexprvalue></attribute>
+		<attribute><name>onclick</name><required>false</required><rtexprvalue>true</rtexprvalue></attribute>
+		<attribute><name>ondblclick</name><required>false</required><rtexprvalue>true</rtexprvalue></attribute>
+		<attribute><name>onmousedown</name><required>false</required><rtexprvalue>true</rtexprvalue></attribute>
+		<attribute><name>onmouseup</name><required>false</required><rtexprvalue>true</rtexprvalue></attribute>
+		<attribute><name>onmouseover</name><required>false</required><rtexprvalue>true</rtexprvalue></attribute>
+		<attribute><name>onmousemove</name><required>false</required><rtexprvalue>true</rtexprvalue></attribute>
+		<attribute><name>onmouseout</name><required>false</required><rtexprvalue>true</rtexprvalue></attribute>
+		<attribute><name>onkeypress</name><required>false</required><rtexprvalue>true</rtexprvalue></attribute>
+		<attribute><name>onkeydown</name><required>false</required><rtexprvalue>true</rtexprvalue></attribute>
+		<attribute><name>onkeyup</name><required>false</required><rtexprvalue>true</rtexprvalue></attribute>
+		<attribute><name>attributes</name><required>false</required><rtexprvalue>true</rtexprvalue></attribute>
+	</tag>
+
+
+	<tag>
+		<name>textarea</name>
+		<tagclass>com.bccard.waf.tag.html.TextareaTag</tagclass>
+		<bodycontent>JSP</bodycontent>
+		<info>	</info>
+		<attribute><name>mode</name><required>false</required><rtexprvalue>true</rtexprvalue></attribute>
+		<attribute><name>rows</name><required>false</required><rtexprvalue>true</rtexprvalue></attribute>
+		<attribute><name>cols</name><required>false</required><rtexprvalue>true</rtexprvalue></attribute>
+
+		<attribute><name>maxlength</name><required>false</required><rtexprvalue>true</rtexprvalue></attribute>
+		<attribute><name>name</name><required>false</required><rtexprvalue>true</rtexprvalue></attribute>
+		<attribute><name>disabled</name><required>false</required><rtexprvalue>true</rtexprvalue></attribute>
+		<attribute><name>readonly</name><required>false</required><rtexprvalue>true</rtexprvalue></attribute>
+		<attribute><name>tabindex</name><required>false</required><rtexprvalue>true</rtexprvalue></attribute>
+		<attribute><name>accesskey</name><required>false</required><rtexprvalue>true</rtexprvalue></attribute>
+		<attribute><name>onfocus</name><required>false</required><rtexprvalue>true</rtexprvalue></attribute>
+		<attribute><name>onblur</name><required>false</required><rtexprvalue>true</rtexprvalue></attribute>
+		<attribute><name>onchange</name><required>false</required><rtexprvalue>true</rtexprvalue></attribute>
+		<attribute><name>accept</name><required>false</required><rtexprvalue>true</rtexprvalue></attribute>
+		<attribute><name>datasrc</name><required>false</required><rtexprvalue>true</rtexprvalue></attribute>
+		<attribute><name>datafld</name><required>false</required><rtexprvalue>true</rtexprvalue></attribute>
+		<attribute><name>dataformatas</name><required>false</required><rtexprvalue>true</rtexprvalue></attribute>
+
+		<attribute><name>id</name><required>false</required><rtexprvalue>true</rtexprvalue></attribute>
+		<attribute><name>class</name><required>false</required><rtexprvalue>true</rtexprvalue></attribute>
+		<attribute><name>style</name><required>false</required><rtexprvalue>true</rtexprvalue></attribute>
+		<attribute><name>title</name><required>false</required><rtexprvalue>true</rtexprvalue></attribute>
+		<attribute><name>lang</name><required>false</required><rtexprvalue>true</rtexprvalue></attribute>
+		<attribute><name>dir</name><required>false</required><rtexprvalue>true</rtexprvalue></attribute>
+		<attribute><name>onclick</name><required>false</required><rtexprvalue>true</rtexprvalue></attribute>
+		<attribute><name>ondblclick</name><required>false</required><rtexprvalue>true</rtexprvalue></attribute>
+		<attribute><name>onmousedown</name><required>false</required><rtexprvalue>true</rtexprvalue></attribute>
+		<attribute><name>onmouseup</name><required>false</required><rtexprvalue>true</rtexprvalue></attribute>
+		<attribute><name>onmouseover</name><required>false</required><rtexprvalue>true</rtexprvalue></attribute>
+		<attribute><name>onmousemove</name><required>false</required><rtexprvalue>true</rtexprvalue></attribute>
+		<attribute><name>onmouseout</name><required>false</required><rtexprvalue>true</rtexprvalue></attribute>
+		<attribute><name>onkeypress</name><required>false</required><rtexprvalue>true</rtexprvalue></attribute>
+		<attribute><name>onkeydown</name><required>false</required><rtexprvalue>true</rtexprvalue></attribute>
+		<attribute><name>onkeyup</name><required>false</required><rtexprvalue>true</rtexprvalue></attribute>
+		<attribute><name>attributes</name><required>false</required><rtexprvalue>true</rtexprvalue></attribute>
+	</tag>
+
+	<tag>
+		<name>password</name>
+		<tagclass>com.bccard.waf.tag.html.PasswordTag</tagclass>
+		<bodycontent>empty</bodycontent>
+		<info>	</info>
+		<attribute><name>autotab</name><required>false</required><rtexprvalue>true</rtexprvalue></attribute>
+		<attribute><name>entertab</name><required>false</required><rtexprvalue>true</rtexprvalue></attribute>
+		<attribute><name>focusall</name><required>false</required><rtexprvalue>true</rtexprvalue></attribute>
+		<attribute><name>mode</name><required>false</required><rtexprvalue>true</rtexprvalue></attribute>
+
+		<attribute><name>name</name><required>true</required><rtexprvalue>true</rtexprvalue></attribute>
+		<attribute><name>value</name><required>false</required><rtexprvalue>true</rtexprvalue></attribute>
+		<attribute><name>disabled</name><required>false</required><rtexprvalue>true</rtexprvalue></attribute>
+		<attribute><name>readonly</name><required>false</required><rtexprvalue>true</rtexprvalue></attribute>
+		<attribute><name>size</name><required>false</required><rtexprvalue>true</rtexprvalue></attribute>
+		<attribute><name>maxlength</name><required>false</required><rtexprvalue>true</rtexprvalue></attribute>
+		<attribute><name>alt</name><required>false</required><rtexprvalue>true</rtexprvalue></attribute>
+		<attribute><name>usemap</name><required>false</required><rtexprvalue>true</rtexprvalue></attribute>
+		<attribute><name>ismap</name><required>false</required><rtexprvalue>true</rtexprvalue></attribute>
+		<attribute><name>tabindex</name><required>false</required><rtexprvalue>true</rtexprvalue></attribute>
+		<attribute><name>accesskey</name><required>false</required><rtexprvalue>true</rtexprvalue></attribute>
+		<attribute><name>onfocus</name><required>false</required><rtexprvalue>true</rtexprvalue></attribute>
+		<attribute><name>onblur</name><required>false</required><rtexprvalue>true</rtexprvalue></attribute>
+		<attribute><name>onselect</name><required>false</required><rtexprvalue>true</rtexprvalue></attribute>
+		<attribute><name>onchange</name><required>false</required><rtexprvalue>true</rtexprvalue></attribute>
+		<attribute><name>accept</name><required>false</required><rtexprvalue>true</rtexprvalue></attribute>
+		<attribute><name>datasrc</name><required>false</required><rtexprvalue>true</rtexprvalue></attribute>
+		<attribute><name>datafld</name><required>false</required><rtexprvalue>true</rtexprvalue></attribute>
+		<attribute><name>dataformatas</name><required>false</required><rtexprvalue>true</rtexprvalue></attribute>
+
+		<attribute><name>id</name><required>false</required><rtexprvalue>true</rtexprvalue></attribute>
+		<attribute><name>class</name><required>false</required><rtexprvalue>true</rtexprvalue></attribute>
+		<attribute><name>style</name><required>false</required><rtexprvalue>true</rtexprvalue></attribute>
+		<attribute><name>title</name><required>false</required><rtexprvalue>true</rtexprvalue></attribute>
+		<attribute><name>lang</name><required>false</required><rtexprvalue>true</rtexprvalue></attribute>
+		<attribute><name>dir</name><required>false</required><rtexprvalue>true</rtexprvalue></attribute>
+		<attribute><name>onclick</name><required>false</required><rtexprvalue>true</rtexprvalue></attribute>
+		<attribute><name>ondblclick</name><required>false</required><rtexprvalue>true</rtexprvalue></attribute>
+		<attribute><name>onmousedown</name><required>false</required><rtexprvalue>true</rtexprvalue></attribute>
+		<attribute><name>onmouseup</name><required>false</required><rtexprvalue>true</rtexprvalue></attribute>
+		<attribute><name>onmouseover</name><required>false</required><rtexprvalue>true</rtexprvalue></attribute>
+		<attribute><name>onmousemove</name><required>false</required><rtexprvalue>true</rtexprvalue></attribute>
+		<attribute><name>onmouseout</name><required>false</required><rtexprvalue>true</rtexprvalue></attribute>
+		<attribute><name>onkeypress</name><required>false</required><rtexprvalue>true</rtexprvalue></attribute>
+		<attribute><name>onkeydown</name><required>false</required><rtexprvalue>true</rtexprvalue></attribute>
+		<attribute><name>onkeyup</name><required>false</required><rtexprvalue>true</rtexprvalue></attribute>
+		<attribute><name>attributes</name><required>false</required><rtexprvalue>true</rtexprvalue></attribute>
+	</tag>
+
+	<tag>
+		<name>select</name>
+		<tagclass>com.bccard.waf.tag.html.SelectTag</tagclass>
+		<bodycontent>JSP</bodycontent>
+		<info>	</info>
+		<attribute><name>value</name><required>false</required><rtexprvalue>true</rtexprvalue></attribute>
+		<attribute><name>entertab</name><required>false</required><rtexprvalue>true</rtexprvalue></attribute>
+		<attribute><name>multiple</name><required>false</required><rtexprvalue>true</rtexprvalue></attribute>
+
+		<attribute><name>name</name><required>false</required><rtexprvalue>true</rtexprvalue></attribute>
+		<attribute><name>size</name><required>false</required><rtexprvalue>true</rtexprvalue></attribute>
+		<attribute><name>disabled</name><required>false</required><rtexprvalue>true</rtexprvalue></attribute>
+		<attribute><name>tabindex</name><required>false</required><rtexprvalue>true</rtexprvalue></attribute>
+		<attribute><name>onfocus</name><required>false</required><rtexprvalue>true</rtexprvalue></attribute>
+		<attribute><name>onblur</name><required>false</required><rtexprvalue>true</rtexprvalue></attribute>
+		<attribute><name>onchange</name><required>false</required><rtexprvalue>true</rtexprvalue></attribute>
+		<attribute><name>accept</name><required>false</required><rtexprvalue>true</rtexprvalue></attribute>
+		<attribute><name>datasrc</name><required>false</required><rtexprvalue>true</rtexprvalue></attribute>
+		<attribute><name>datafld</name><required>false</required><rtexprvalue>true</rtexprvalue></attribute>
+		<attribute><name>dataformatas</name><required>false</required><rtexprvalue>true</rtexprvalue></attribute>
+
+		<attribute><name>id</name><required>false</required><rtexprvalue>true</rtexprvalue></attribute>
+		<attribute><name>class</name><required>false</required><rtexprvalue>true</rtexprvalue></attribute>
+		<attribute><name>style</name><required>false</required><rtexprvalue>true</rtexprvalue></attribute>
+		<attribute><name>title</name><required>false</required><rtexprvalue>true</rtexprvalue></attribute>
+		<attribute><name>lang</name><required>false</required><rtexprvalue>true</rtexprvalue></attribute>
+		<attribute><name>dir</name><required>false</required><rtexprvalue>true</rtexprvalue></attribute>
+		<attribute><name>onclick</name><required>false</required><rtexprvalue>true</rtexprvalue></attribute>
+		<attribute><name>ondblclick</name><required>false</required><rtexprvalue>true</rtexprvalue></attribute>
+		<attribute><name>onmousedown</name><required>false</required><rtexprvalue>true</rtexprvalue></attribute>
+		<attribute><name>onmouseup</name><required>false</required><rtexprvalue>true</rtexprvalue></attribute>
+		<attribute><name>onmouseover</name><required>false</required><rtexprvalue>true</rtexprvalue></attribute>
+		<attribute><name>onmousemove</name><required>false</required><rtexprvalue>true</rtexprvalue></attribute>
+		<attribute><name>onmouseout</name><required>false</required><rtexprvalue>true</rtexprvalue></attribute>
+		<attribute><name>onkeypress</name><required>false</required><rtexprvalue>true</rtexprvalue></attribute>
+		<attribute><name>onkeydown</name><required>false</required><rtexprvalue>true</rtexprvalue></attribute>
+		<attribute><name>onkeyup</name><required>false</required><rtexprvalue>true</rtexprvalue></attribute>
+		<attribute><name>attributes</name><required>false</required><rtexprvalue>true</rtexprvalue></attribute>
+	</tag>
+
+	<tag>
+		<name>option</name>
+		<tagclass>com.bccard.waf.tag.html.SelectOptionTag</tagclass>
+		<bodycontent>JSP</bodycontent>
+		<info>	</info>
+
+		<attribute><name>selected</name><required>false</required><rtexprvalue>true</rtexprvalue></attribute>
+		<attribute><name>label</name><required>false</required><rtexprvalue>true</rtexprvalue></attribute>
+
+		<attribute><name>datasrc</name><required>false</required><rtexprvalue>true</rtexprvalue></attribute>
+		<attribute><name>datafld</name><required>false</required><rtexprvalue>true</rtexprvalue></attribute>
+		<attribute><name>dataformatas</name><required>false</required><rtexprvalue>true</rtexprvalue></attribute>
+	</tag>
+
+	<tag>
+		<name>hidden</name>
+		<tagclass>com.bccard.waf.tag.html.HiddenTag</tagclass>
+		<bodycontent>empty</bodycontent>
+		<info>	</info>
+		<attribute><name>name</name><required>true</required><rtexprvalue>true</rtexprvalue></attribute>
+		<attribute><name>value</name><required>false</required><rtexprvalue>true</rtexprvalue></attribute>
+		<attribute><name>datasrc</name><required>false</required><rtexprvalue>true</rtexprvalue></attribute>
+		<attribute><name>datafld</name><required>false</required><rtexprvalue>true</rtexprvalue></attribute>
+		<attribute><name>dataformatas</name><required>false</required><rtexprvalue>true</rtexprvalue></attribute>
+	</tag>
+
+	<tag>
+		<name>hiddenParameterMap</name>
+		<tagclass>com.bccard.waf.tag.html.HiddenParameterMapTag</tagclass>
+		<bodycontent>EMPTY</bodycontent>
+		<info>	</info>
+	</tag>
+
+	<tag>
+		<name>checkset</name>
+		<tagclass>com.bccard.waf.tag.html.CheckSetTag</tagclass>
+		<bodycontent>JSP</bodycontent>
+		<info>	</info>
+		<attribute><name>split</name><required>false</required><rtexprvalue>true</rtexprvalue></attribute>
+		<attribute><name>value</name><required>false</required><rtexprvalue>true</rtexprvalue></attribute>
+		<attribute><name>datasrc</name><required>false</required><rtexprvalue>true</rtexprvalue></attribute>
+		<attribute><name>datafld</name><required>false</required><rtexprvalue>true</rtexprvalue></attribute>
+		<attribute><name>dataformatas</name><required>false</required><rtexprvalue>true</rtexprvalue></attribute>
+	</tag>
+
+	<tag>
+		<name>checkbox</name>
+		<tagclass>com.bccard.waf.tag.html.CheckboxTag</tagclass>
+		<bodycontent>EMPTY</bodycontent>
+		<info>	</info>
+		<attribute><name>checked</name><required>false</required><rtexprvalue>true</rtexprvalue></attribute>
+
+		<attribute><name>value</name><required>false</required><rtexprvalue>true</rtexprvalue></attribute>
+		<attribute><name>name</name><required>false</required><rtexprvalue>true</rtexprvalue></attribute>
+		<attribute><name>disabled</name><required>false</required><rtexprvalue>true</rtexprvalue></attribute>
+		<attribute><name>tabindex</name><required>false</required><rtexprvalue>true</rtexprvalue></attribute>
+		<attribute><name>onfocus</name><required>false</required><rtexprvalue>true</rtexprvalue></attribute>
+		<attribute><name>onblur</name><required>false</required><rtexprvalue>true</rtexprvalue></attribute>
+		<attribute><name>onchange</name><required>false</required><rtexprvalue>true</rtexprvalue></attribute>
+		<attribute><name>accept</name><required>false</required><rtexprvalue>true</rtexprvalue></attribute>
+		<attribute><name>datasrc</name><required>false</required><rtexprvalue>true</rtexprvalue></attribute>
+		<attribute><name>datafld</name><required>false</required><rtexprvalue>true</rtexprvalue></attribute>
+		<attribute><name>dataformatas</name><required>false</required><rtexprvalue>true</rtexprvalue></attribute>
+
+		<attribute><name>id</name><required>false</required><rtexprvalue>true</rtexprvalue></attribute>
+		<attribute><name>class</name><required>false</required><rtexprvalue>true</rtexprvalue></attribute>
+		<attribute><name>style</name><required>false</required><rtexprvalue>true</rtexprvalue></attribute>
+		<attribute><name>title</name><required>false</required><rtexprvalue>true</rtexprvalue></attribute>
+		<attribute><name>lang</name><required>false</required><rtexprvalue>true</rtexprvalue></attribute>
+		<attribute><name>dir</name><required>false</required><rtexprvalue>true</rtexprvalue></attribute>
+		<attribute><name>onclick</name><required>false</required><rtexprvalue>true</rtexprvalue></attribute>
+		<attribute><name>ondblclick</name><required>false</required><rtexprvalue>true</rtexprvalue></attribute>
+		<attribute><name>onmousedown</name><required>false</required><rtexprvalue>true</rtexprvalue></attribute>
+		<attribute><name>onmouseup</name><required>false</required><rtexprvalue>true</rtexprvalue></attribute>
+		<attribute><name>onmouseover</name><required>false</required><rtexprvalue>true</rtexprvalue></attribute>
+		<attribute><name>onmousemove</name><required>false</required><rtexprvalue>true</rtexprvalue></attribute>
+		<attribute><name>onmouseout</name><required>false</required><rtexprvalue>true</rtexprvalue></attribute>
+		<attribute><name>onkeypress</name><required>false</required><rtexprvalue>true</rtexprvalue></attribute>
+		<attribute><name>onkeydown</name><required>false</required><rtexprvalue>true</rtexprvalue></attribute>
+		<attribute><name>onkeyup</name><required>false</required><rtexprvalue>true</rtexprvalue></attribute>
+		<attribute><name>attributes</name><required>false</required><rtexprvalue>true</rtexprvalue></attribute>
+	</tag>
+
+	<tag>
+		<name>radio</name>
+		<tagclass>com.bccard.waf.tag.html.RadioTag</tagclass>
+		<bodycontent>EMPTY</bodycontent>
+		<info>	</info>
+		<attribute><name>checked</name><required>false</required><rtexprvalue>true</rtexprvalue></attribute>
+
+		<attribute><name>value</name><required>false</required><rtexprvalue>true</rtexprvalue></attribute>
+		<attribute><name>name</name><required>false</required><rtexprvalue>true</rtexprvalue></attribute>
+		<attribute><name>disabled</name><required>false</required><rtexprvalue>true</rtexprvalue></attribute>
+		<attribute><name>tabindex</name><required>false</required><rtexprvalue>true</rtexprvalue></attribute>
+		<attribute><name>onfocus</name><required>false</required><rtexprvalue>true</rtexprvalue></attribute>
+		<attribute><name>onblur</name><required>false</required><rtexprvalue>true</rtexprvalue></attribute>
+		<attribute><name>onchange</name><required>false</required><rtexprvalue>true</rtexprvalue></attribute>
+		<attribute><name>accept</name><required>false</required><rtexprvalue>true</rtexprvalue></attribute>
+		<attribute><name>datasrc</name><required>false</required><rtexprvalue>true</rtexprvalue></attribute>
+		<attribute><name>datafld</name><required>false</required><rtexprvalue>true</rtexprvalue></attribute>
+		<attribute><name>dataformatas</name><required>false</required><rtexprvalue>true</rtexprvalue></attribute>
+
+		<attribute><name>id</name><required>false</required><rtexprvalue>true</rtexprvalue></attribute>
+		<attribute><name>class</name><required>false</required><rtexprvalue>true</rtexprvalue></attribute>
+		<attribute><name>style</name><required>false</required><rtexprvalue>true</rtexprvalue></attribute>
+		<attribute><name>title</name><required>false</required><rtexprvalue>true</rtexprvalue></attribute>
+		<attribute><name>lang</name><required>false</required><rtexprvalue>true</rtexprvalue></attribute>
+		<attribute><name>dir</name><required>false</required><rtexprvalue>true</rtexprvalue></attribute>
+		<attribute><name>onclick</name><required>false</required><rtexprvalue>true</rtexprvalue></attribute>
+		<attribute><name>ondblclick</name><required>false</required><rtexprvalue>true</rtexprvalue></attribute>
+		<attribute><name>onmousedown</name><required>false</required><rtexprvalue>true</rtexprvalue></attribute>
+		<attribute><name>onmouseup</name><required>false</required><rtexprvalue>true</rtexprvalue></attribute>
+		<attribute><name>onmouseover</name><required>false</required><rtexprvalue>true</rtexprvalue></attribute>
+		<attribute><name>onmousemove</name><required>false</required><rtexprvalue>true</rtexprvalue></attribute>
+		<attribute><name>onmouseout</name><required>false</required><rtexprvalue>true</rtexprvalue></attribute>
+		<attribute><name>onkeypress</name><required>false</required><rtexprvalue>true</rtexprvalue></attribute>
+		<attribute><name>onkeydown</name><required>false</required><rtexprvalue>true</rtexprvalue></attribute>
+		<attribute><name>onkeyup</name><required>false</required><rtexprvalue>true</rtexprvalue></attribute>
+		<attribute><name>attributes</name><required>false</required><rtexprvalue>true</rtexprvalue></attribute>
+	</tag>
+
+	<!-- html 페이지 시작 -->
+	
+	<tag>
+		<name>pagenavigation</name>
+		<tagclass>com.bccard.waf.tag.html.page.PageNavigationTag</tagclass>
+		<bodycontent>JSP</bodycontent>
+		<info>	</info>
+		<attribute><name>total</name><required>false</required><rtexprvalue>true</rtexprvalue></attribute>
+		<attribute><name>currpage</name><required>false</required><rtexprvalue>true</rtexprvalue></attribute>
+		<attribute><name>pages</name><required>false</required><rtexprvalue>true</rtexprvalue></attribute>
+		<attribute><name>rows</name><required>false</required><rtexprvalue>true</rtexprvalue></attribute>
+		<attribute><name>href</name><required>false</required><rtexprvalue>true</rtexprvalue></attribute>
+		<attribute><name>delim</name><required>false</required><rtexprvalue>true</rtexprvalue></attribute>
+		<attribute><name>enable</name><required>false</required><rtexprvalue>true</rtexprvalue></attribute>
+		<attribute><name>scriptFirst</name><required>false</required><rtexprvalue>true</rtexprvalue></attribute>
+		<attribute><name>scriptLast</name><required>false</required><rtexprvalue>true</rtexprvalue></attribute>
+		<attribute><name>scriptBack10</name><required>false</required><rtexprvalue>true</rtexprvalue></attribute>
+		<attribute><name>scriptNext10</name><required>false</required><rtexprvalue>true</rtexprvalue></attribute>
+		<attribute><name>scriptBack</name><required>false</required><rtexprvalue>true</rtexprvalue></attribute>
+		<attribute><name>scriptNext</name><required>false</required><rtexprvalue>true</rtexprvalue></attribute>
+		<attribute><name>scriptPage</name><required>false</required><rtexprvalue>true</rtexprvalue></attribute>
+		<attribute><name>scriptCurrpage</name><required>false</required><rtexprvalue>true</rtexprvalue></attribute>
+	</tag>
+	<!-- html 페이지 끝 -->
+
+	<!-- html 캘린더 시작 -->
+	<tag>
+		<name>calendar</name>
+		<tagclass>com.bccard.waf.tag.html.calendar.CalendarTag</tagclass>
+		<bodycontent>JSP</bodycontent>
+		<info>	</info>
+		<attribute><name>divid</name><required>true</required><rtexprvalue>true</rtexprvalue></attribute>
+		<attribute><name>style</name><required>false</required><rtexprvalue>true</rtexprvalue></attribute>
+		<attribute><name>yearobj</name><required>false</required><rtexprvalue>true</rtexprvalue></attribute>
+		<attribute><name>monthobj</name><required>false</required><rtexprvalue>true</rtexprvalue></attribute>
+	</tag>
+	<tag>
+		<name>calendartable</name>
+		<tagclass>com.bccard.waf.tag.html.calendar.CalendarTableTag</tagclass>
+		<bodycontent>EMPTY</bodycontent>
+		<info>	</info>
+		<attribute><name>width</name><required>false</required><rtexprvalue>true</rtexprvalue></attribute>
+		<attribute><name>height</name><required>false</required><rtexprvalue>true</rtexprvalue></attribute>
+		<attribute><name>align</name><required>false</required><rtexprvalue>true</rtexprvalue></attribute>
+		<attribute><name>border</name><required>false</required><rtexprvalue>true</rtexprvalue></attribute>
+		<attribute><name>cellpadding</name><required>false</required><rtexprvalue>true</rtexprvalue></attribute>
+		<attribute><name>cellspacing</name><required>false</required><rtexprvalue>true</rtexprvalue></attribute>
+		<attribute><name>bgcolor</name><required>false</required><rtexprvalue>true</rtexprvalue></attribute>
+		<attribute><name>style</name><required>false</required><rtexprvalue>true</rtexprvalue></attribute>
+		<attribute><name>clazz</name><required>false</required><rtexprvalue>true</rtexprvalue></attribute>
+	</tag>
+	<tag>
+		<name>calendartd</name>
+		<tagclass>com.bccard.waf.tag.html.calendar.CalendarTdTag</tagclass>
+		<bodycontent>EMPTY</bodycontent>
+		<info>	</info>
+		<attribute><name>type</name><required>true</required><rtexprvalue>true</rtexprvalue></attribute>
+		<attribute><name>width</name><required>false</required><rtexprvalue>true</rtexprvalue></attribute>
+		<attribute><name>height</name><required>false</required><rtexprvalue>true</rtexprvalue></attribute>
+		<attribute><name>align</name><required>false</required><rtexprvalue>true</rtexprvalue></attribute>
+		<attribute><name>valign</name><required>false</required><rtexprvalue>true</rtexprvalue></attribute>
+		<attribute><name>style</name><required>false</required><rtexprvalue>true</rtexprvalue></attribute>
+		<attribute><name>clazz</name><required>false</required><rtexprvalue>true</rtexprvalue></attribute>
+		<attribute><name>bgcolor</name><required>false</required><rtexprvalue>true</rtexprvalue></attribute>
+		<attribute><name>head</name><required>false</required><rtexprvalue>true</rtexprvalue></attribute>
+	</tag>
+	<tag>
+		<name>calendartr</name>
+		<tagclass>com.bccard.waf.tag.html.calendar.CalendarTrTag</tagclass>
+		<bodycontent>EMPTY</bodycontent>
+		<info>	</info>
+		<attribute><name>type</name><required>true</required><rtexprvalue>true</rtexprvalue></attribute>
+		<attribute><name>width</name><required>false</required><rtexprvalue>true</rtexprvalue></attribute>
+		<attribute><name>height</name><required>false</required><rtexprvalue>true</rtexprvalue></attribute>
+		<attribute><name>align</name><required>false</required><rtexprvalue>true</rtexprvalue></attribute>
+		<attribute><name>valign</name><required>false</required><rtexprvalue>true</rtexprvalue></attribute>
+		<attribute><name>style</name><required>false</required><rtexprvalue>true</rtexprvalue></attribute>
+		<attribute><name>clazz</name><required>false</required><rtexprvalue>true</rtexprvalue></attribute>
+		<attribute><name>bgcolor</name><required>false</required><rtexprvalue>true</rtexprvalue></attribute>
+		<attribute><name>head</name><required>false</required><rtexprvalue>true</rtexprvalue></attribute>
+	</tag>
+	<tag>
+		<name>calendarclose</name>
+		<tagclass>com.bccard.waf.tag.html.calendar.CalendarActionCloseTag</tagclass>
+		<bodycontent>JSP</bodycontent>
+		<info>	</info>
+		<attribute><name>type</name><required>true</required><rtexprvalue>true</rtexprvalue></attribute>
+		<attribute><name>value</name><required>false</required><rtexprvalue>true</rtexprvalue></attribute>
+		<attribute><name>style</name><required>false</required><rtexprvalue>true</rtexprvalue></attribute>
+		<attribute><name>clazz</name><required>false</required><rtexprvalue>true</rtexprvalue></attribute>
+	</tag>
+	<tag>
+		<name>calendarmovedate</name>
+		<tagclass>com.bccard.waf.tag.html.calendar.CalendarActionMoveDateTag</tagclass>
+		<bodycontent>JSP</bodycontent>
+		<info>	</info>
+		<attribute><name>type</name><required>true</required><rtexprvalue>true</rtexprvalue></attribute>
+		<attribute><name>value</name><required>false</required><rtexprvalue>true</rtexprvalue></attribute>
+		<attribute><name>style</name><required>false</required><rtexprvalue>true</rtexprvalue></attribute>
+		<attribute><name>clazz</name><required>false</required><rtexprvalue>true</rtexprvalue></attribute>
+	</tag>
+	<tag>
+		<name>calendarshow</name>
+		<tagclass>com.bccard.waf.tag.html.calendar.CalendarActionShowTag</tagclass>
+		<bodycontent>JSP</bodycontent>
+		<info>	</info>
+		<attribute><name>target</name><required>true</required><rtexprvalue>true</rtexprvalue></attribute>
+		<attribute><name>delim</name><required>false</required><rtexprvalue>true</rtexprvalue></attribute>
+		<attribute><name>type</name><required>true</required><rtexprvalue>true</rtexprvalue></attribute>
+		<attribute><name>value</name><required>false</required><rtexprvalue>true</rtexprvalue></attribute>
+		<attribute><name>year</name><required>false</required><rtexprvalue>true</rtexprvalue></attribute>
+		<attribute><name>month</name><required>false</required><rtexprvalue>true</rtexprvalue></attribute>
+		<attribute><name>style</name><required>false</required><rtexprvalue>true</rtexprvalue></attribute>
+		<attribute><name>clazz</name><required>false</required><rtexprvalue>true</rtexprvalue></attribute>
+	</tag>
+	<tag>
+		<name>calendarmovenext</name>
+		<tagclass>com.bccard.waf.tag.html.calendar.CalendarActionMoveNextTag</tagclass>
+		<bodycontent>JSP</bodycontent>
+		<info>	</info>
+		<attribute><name>gubun</name><required>true</required><rtexprvalue>true</rtexprvalue></attribute>
+		<attribute><name>nextvalue</name><required>true</required><rtexprvalue>true</rtexprvalue></attribute>
+		<attribute><name>type</name><required>true</required><rtexprvalue>true</rtexprvalue></attribute>
+		<attribute><name>value</name><required>false</required><rtexprvalue>true</rtexprvalue></attribute>
+		<attribute><name>style</name><required>false</required><rtexprvalue>true</rtexprvalue></attribute>
+		<attribute><name>clazz</name><required>false</required><rtexprvalue>true</rtexprvalue></attribute>
+	</tag>
+	<tag>
+		<name>calendarmonthcombo</name>
+		<tagclass>com.bccard.waf.tag.html.calendar.CalendarMonthComboTag</tagclass>
+		<bodycontent>EMPTY</bodycontent>
+		<info>	</info>
+		<attribute><name>value</name><required>false</required><rtexprvalue>true</rtexprvalue></attribute>
+		<attribute><name>entertab</name><required>false</required><rtexprvalue>true</rtexprvalue></attribute>
+
+		<attribute><name>name</name><required>false</required><rtexprvalue>true</rtexprvalue></attribute>
+		<attribute><name>size</name><required>false</required><rtexprvalue>true</rtexprvalue></attribute>
+		<attribute><name>disabled</name><required>false</required><rtexprvalue>true</rtexprvalue></attribute>
+		<attribute><name>tabindex</name><required>false</required><rtexprvalue>true</rtexprvalue></attribute>
+		<attribute><name>onfocus</name><required>false</required><rtexprvalue>true</rtexprvalue></attribute>
+		<attribute><name>onblur</name><required>false</required><rtexprvalue>true</rtexprvalue></attribute>
+		<attribute><name>onchange</name><required>false</required><rtexprvalue>true</rtexprvalue></attribute>
+		<attribute><name>accept</name><required>false</required><rtexprvalue>true</rtexprvalue></attribute>
+		<attribute><name>datasrc</name><required>false</required><rtexprvalue>true</rtexprvalue></attribute>
+		<attribute><name>datafld</name><required>false</required><rtexprvalue>true</rtexprvalue></attribute>
+		<attribute><name>dataformatas</name><required>false</required><rtexprvalue>true</rtexprvalue></attribute>
+
+		<attribute><name>id</name><required>false</required><rtexprvalue>true</rtexprvalue></attribute>
+		<attribute><name>class</name><required>false</required><rtexprvalue>true</rtexprvalue></attribute>
+		<attribute><name>style</name><required>false</required><rtexprvalue>true</rtexprvalue></attribute>
+		<attribute><name>title</name><required>false</required><rtexprvalue>true</rtexprvalue></attribute>
+		<attribute><name>lang</name><required>false</required><rtexprvalue>true</rtexprvalue></attribute>
+		<attribute><name>dir</name><required>false</required><rtexprvalue>true</rtexprvalue></attribute>
+		<attribute><name>onclick</name><required>false</required><rtexprvalue>true</rtexprvalue></attribute>
+		<attribute><name>ondblclick</name><required>false</required><rtexprvalue>true</rtexprvalue></attribute>
+		<attribute><name>onmousedown</name><required>false</required><rtexprvalue>true</rtexprvalue></attribute>
+		<attribute><name>onmouseup</name><required>false</required><rtexprvalue>true</rtexprvalue></attribute>
+		<attribute><name>onmouseover</name><required>false</required><rtexprvalue>true</rtexprvalue></attribute>
+		<attribute><name>onmousemove</name><required>false</required><rtexprvalue>true</rtexprvalue></attribute>
+		<attribute><name>onmouseout</name><required>false</required><rtexprvalue>true</rtexprvalue></attribute>
+		<attribute><name>onkeypress</name><required>false</required><rtexprvalue>true</rtexprvalue></attribute>
+		<attribute><name>onkeydown</name><required>false</required><rtexprvalue>true</rtexprvalue></attribute>
+		<attribute><name>onkeyup</name><required>false</required><rtexprvalue>true</rtexprvalue></attribute>
+		<attribute><name>attributes</name><required>false</required><rtexprvalue>true</rtexprvalue></attribute>
+	</tag>
+	<tag>
+		<name>calendaryearcombo</name>
+		<tagclass>com.bccard.waf.tag.html.calendar.CalendarYearComboTag</tagclass>
+		<bodycontent>EMPTY</bodycontent>
+		<info>	</info>
+		<attribute><name>start</name><required>false</required><rtexprvalue>true</rtexprvalue></attribute>
+		<attribute><name>end</name><required>false</required><rtexprvalue>true</rtexprvalue></attribute>
+
+		<attribute><name>value</name><required>false</required><rtexprvalue>true</rtexprvalue></attribute>
+		<attribute><name>entertab</name><required>false</required><rtexprvalue>true</rtexprvalue></attribute>
+
+		<attribute><name>name</name><required>false</required><rtexprvalue>true</rtexprvalue></attribute>
+		<attribute><name>size</name><required>false</required><rtexprvalue>true</rtexprvalue></attribute>
+		<attribute><name>disabled</name><required>false</required><rtexprvalue>true</rtexprvalue></attribute>
+		<attribute><name>tabindex</name><required>false</required><rtexprvalue>true</rtexprvalue></attribute>
+		<attribute><name>onfocus</name><required>false</required><rtexprvalue>true</rtexprvalue></attribute>
+		<attribute><name>onblur</name><required>false</required><rtexprvalue>true</rtexprvalue></attribute>
+		<attribute><name>onchange</name><required>false</required><rtexprvalue>true</rtexprvalue></attribute>
+		<attribute><name>accept</name><required>false</required><rtexprvalue>true</rtexprvalue></attribute>
+		<attribute><name>datasrc</name><required>false</required><rtexprvalue>true</rtexprvalue></attribute>
+		<attribute><name>datafld</name><required>false</required><rtexprvalue>true</rtexprvalue></attribute>
+		<attribute><name>dataformatas</name><required>false</required><rtexprvalue>true</rtexprvalue></attribute>
+
+		<attribute><name>id</name><required>false</required><rtexprvalue>true</rtexprvalue></attribute>
+		<attribute><name>class</name><required>false</required><rtexprvalue>true</rtexprvalue></attribute>
+		<attribute><name>style</name><required>false</required><rtexprvalue>true</rtexprvalue></attribute>
+		<attribute><name>title</name><required>false</required><rtexprvalue>true</rtexprvalue></attribute>
+		<attribute><name>lang</name><required>false</required><rtexprvalue>true</rtexprvalue></attribute>
+		<attribute><name>dir</name><required>false</required><rtexprvalue>true</rtexprvalue></attribute>
+		<attribute><name>onclick</name><required>false</required><rtexprvalue>true</rtexprvalue></attribute>
+		<attribute><name>ondblclick</name><required>false</required><rtexprvalue>true</rtexprvalue></attribute>
+		<attribute><name>onmousedown</name><required>false</required><rtexprvalue>true</rtexprvalue></attribute>
+		<attribute><name>onmouseup</name><required>false</required><rtexprvalue>true</rtexprvalue></attribute>
+		<attribute><name>onmouseover</name><required>false</required><rtexprvalue>true</rtexprvalue></attribute>
+		<attribute><name>onmousemove</name><required>false</required><rtexprvalue>true</rtexprvalue></attribute>
+		<attribute><name>onmouseout</name><required>false</required><rtexprvalue>true</rtexprvalue></attribute>
+		<attribute><name>onkeypress</name><required>false</required><rtexprvalue>true</rtexprvalue></attribute>
+		<attribute><name>onkeydown</name><required>false</required><rtexprvalue>true</rtexprvalue></attribute>
+		<attribute><name>onkeyup</name><required>false</required><rtexprvalue>true</rtexprvalue></attribute>
+		<attribute><name>attributes</name><required>false</required><rtexprvalue>true</rtexprvalue></attribute>
+	</tag>
+	<!-- html 캘린더 끝 -->
+
+	<!-- html 이미지리스트 시작 -->
+
+	<tag>
+		<name>imglist</name>
+		<tagclass>com.bccard.waf.tag.html.imagelist.ImageListTag</tagclass>
+		<bodycontent>JSP</bodycontent>
+		<info>이미지리스트</info>
+		<attribute><name>name</name><required>true</required><rtexprvalue>true</rtexprvalue></attribute>
+		<attribute><name>border</name><required>false</required><rtexprvalue>true</rtexprvalue></attribute>
+		<attribute><name>align</name><required>false</required><rtexprvalue>true</rtexprvalue></attribute>
+		<attribute><name>width</name><required>false</required><rtexprvalue>true</rtexprvalue></attribute>
+		<attribute><name>height</name><required>false</required><rtexprvalue>true</rtexprvalue></attribute>
+	</tag>
+
+	<tag>
+		<name>imglistimage</name>
+		<tagclass>com.bccard.waf.tag.html.imagelist.ImageListImgTag</tagclass>
+		<bodycontent>EMPTY</bodycontent>
+		<info>이미지리스트에 이미지등록</info>
+		<attribute><name>key</name><required>true</required><rtexprvalue>true</rtexprvalue></attribute>
+		<attribute><name>src</name><required>true</required><rtexprvalue>true</rtexprvalue></attribute>
+		<attribute><name>opensrc</name><required>false</required><rtexprvalue>true</rtexprvalue></attribute>
+	</tag>
+
+	<tag>
+		<name>imglistviewer</name>
+		<tagclass>com.bccard.waf.tag.html.imagelist.ImageListViewerTag</tagclass>
+		<bodycontent>EMPTY</bodycontent>
+		<info>이미지리스트 등록된 이미지를 화면에 표시</info>
+		<attribute><name>name</name><required>true</required><rtexprvalue>true</rtexprvalue></attribute>
+	</tag>
+
+	<!-- html 이미지리스트 끝 -->
+
+	<!-- html 트리뷰 시작 -->
+
+	<tag>
+		<name>treeview</name>
+		<tagclass>com.bccard.waf.tag.html.treeview.TreeViewTag</tagclass>
+		<bodycontent>JSP</bodycontent>
+		<info>트리뷰 생성 및 기초 설정</info>
+		<attribute><name>name</name><required>true</required><rtexprvalue>true</rtexprvalue></attribute>
+		<attribute><name>title</name><required>flase</required><rtexprvalue>true</rtexprvalue></attribute>
+		<attribute><name>href</name><required>false</required><rtexprvalue>true</rtexprvalue></attribute>
+		<attribute><name>target</name><required>false</required><rtexprvalue>true</rtexprvalue></attribute>
+		<attribute><name>onMouseOver</name><required>false</required><rtexprvalue>true</rtexprvalue></attribute>
+		<attribute><name>onMouseOut</name><required>false</required><rtexprvalue>true</rtexprvalue></attribute>
+		<attribute><name>onClick</name><required>false</required><rtexprvalue>true</rtexprvalue></attribute>
+		<attribute><name>imagelist</name><required>false</required><rtexprvalue>true</rtexprvalue></attribute>
+		<attribute><name>imagekey</name><required>false</required><rtexprvalue>true</rtexprvalue></attribute>
+		<attribute><name>cookieTime</name><required>false</required><rtexprvalue>true</rtexprvalue></attribute>
+		<attribute><name>nodeImageBundle</name><required>false</required><rtexprvalue>true</rtexprvalue></attribute>
+	</tag>
+
+	<tag>
+		<name>treeviewnode</name>
+		<tagclass>com.bccard.waf.tag.html.treeview.TreeNodeTag</tagclass>
+		<bodycontent>JSP</bodycontent>
+		<info>트리 노드 설정</info>
+		<attribute><name>key</name><required>true</required><rtexprvalue>true</rtexprvalue></attribute>
+		<attribute><name>parentkey</name><required>false</required><rtexprvalue>true</rtexprvalue></attribute>
+		<attribute><name>href</name><required>false</required><rtexprvalue>true</rtexprvalue></attribute>
+		<attribute><name>target</name><required>false</required><rtexprvalue>true</rtexprvalue></attribute>
+		<attribute><name>onMouseOver</name><required>false</required><rtexprvalue>true</rtexprvalue></attribute>
+		<attribute><name>onMouseOut</name><required>false</required><rtexprvalue>true</rtexprvalue></attribute>
+		<attribute><name>onClick</name><required>false</required><rtexprvalue>true</rtexprvalue></attribute>
+		<attribute><name>imagekey</name><required>false</required><rtexprvalue>true</rtexprvalue></attribute>
+	</tag>
+
+
+	<tag>
+		<name>treeviewscriptonly</name>
+		<tagclass>com.bccard.waf.tag.html.treeview.TreeViewScriptOnlyTag</tagclass>
+		<bodycontent>empty</bodycontent>
+		<info>트리뷰 생성 및 기초 설정</info>
+		<attribute><name>name</name><required>true</required><rtexprvalue>true</rtexprvalue></attribute>
+		<attribute><name>cookieTime</name><required>false</required><rtexprvalue>true</rtexprvalue></attribute>
+	</tag>
+	<!-- html 트리뷰 끝 -->
+
+
+	<!-- html 끝 -->
+
+	<!-- 기타유틸 시작 -->
+	<tag>
+		<name>encrypt</name>
+		<tagclass>com.bccard.waf.tag.util.IniPluginEncryptTag</tagclass>
+		<bodycontent>JSP</bodycontent>
+		<info>IniPlugin 암호화</info>
+	</tag>
+	<tag>
+		<name>encHidden</name>
+		<tagclass>com.bccard.waf.tag.util.IniPluginHiddenTag</tagclass>
+		<bodycontent>empty</bodycontent>
+		<info>IniPlugin 암호화된 hidden</info>
+		<attribute><name>name</name><required>true</required><rtexprvalue>true</rtexprvalue></attribute>
+		<attribute><name>value</name><required>false</required><rtexprvalue>true</rtexprvalue></attribute>
+	</tag>
+	<tag>
+		<name>logger</name>
+		<tagclass>com.bccard.waf.tag.util.LoggerTag</tagclass>
+		<bodycontent>JSP</bodycontent>
+		<info>로그 출력</info>
+		<attribute><name>level</name><required>true</required><rtexprvalue>true</rtexprvalue></attribute>
+		<attribute><name>throwable</name><required>false</required><rtexprvalue>true</rtexprvalue></attribute>
+	</tag>
+
+	<tag>
+		<name>strBuffer</name>
+		<tagclass>com.bccard.waf.tag.util.StringBufferTag</tagclass>
+		<bodycontent>JSP</bodycontent>
+		<info>스트링버퍼</info>
+		<attribute><name>id</name><required>true</required><rtexprvalue>true</rtexprvalue></attribute>
+		<attribute><name>offset</name><required>false</required><rtexprvalue>true</rtexprvalue></attribute>
+		<attribute><name>new</name><required>false</required><rtexprvalue>true</rtexprvalue></attribute>
+	</tag>
+
+	<!-- 기타유틸 끝 -->
+
+
+
+</taglib>
+

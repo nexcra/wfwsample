@@ -1,0 +1,67 @@
+<?xml version="1.0" encoding="EUC-KR"?>
+
+<ControllerServlet name="GolfCtrlServ" pattern=".do" charset="EUC-KR" apppath="/app">
+
+	<WelcomePage>/view/index.jsp</WelcomePage>
+	<ErrorPage>/view/common/Error.jsp</ErrorPage>
+
+	<!-- 팩토리 -->
+	<Factory name="default" 	type="RequestParser">com.bccard.waf.core.RequestParserIniPluginFactory</Factory>
+	<Factory name="standard" 	type="RequestParser">com.bccard.waf.core.RequestParserBcStanardFactory</Factory>
+	<Factory name="default" 	type="dao">com.bccard.golf.factory.GolfDbConnectionFactory</Factory>
+	<Factory name="dbtao" 		type="tao">com.bccard.golf.dbtao.DbTaoLogConnectionFactory</Factory>
+	<Factory name="jolt"    	type="tao">com.bccard.waf.tao.jolt.JoltConnectionFactory</Factory>	
+	<Factory name="mca" 		type="tao">com.bccard.waf.tao.mca.McaConnectionFactory</Factory>	
+	<Factory name="isp" 		type="RequestParser">com.bccard.golf.common.RequestParserINIKVPFactory</Factory>
+
+	<Resource type="action" scope="servlet">
+		<Config>d:/my_loung_dev/workspace/bc_dev/WebContent/WEB-INF/config/action.xml</Config>
+	</Resource>
+	
+	<Resource type="proc" scope="servlet">
+		<Config>d:/my_loung_dev/workspace/bc_dev/WebContent/WEB-INF/config/proc.xml</Config>
+	</Resource>
+	
+	<!-- 메시지 리소스 -->
+	<Resource type="message" scope="servlet">
+		<Config>d:/my_loung_dev/workspace/bc_dev/WebContent/WEB-INF/config/message.xml</Config>
+	</Resource>
+
+	<!-- 코드 리소스 -->
+	<Resource type="code" scope="servlet">
+		<Config>d:/my_loung_dev/workspace/bc_dev/WebContent/WEB-INF/config/code.xml</Config>
+	</Resource>
+	
+	<Resource type="UserDefine" name="GolfConfig" scope="servlet">
+		<Config>d:/my_loung_dev/workspace/bc_dev/WebContent/WEB-INF/config/config.xml</Config>
+		<Property key="factory">com.bccard.golf.common.config.ConfigResourceFactory</Property>
+	</Resource>
+
+	<!-- 개발기 막음. 운영기는 OPEN해야 함 
+	<Agent name="GolfLoungSMSAgent" date="0000.00.00" time="12:00:00">com.bccard.golf.action.admin.booking.GolfLoungSMSAgent</Agent>
+	<Agent name="GolfLoungPAYAgent" date="0000.00.00" time="13:00:00">com.bccard.golf.action.admin.member.GolfLoungPAYAgent</Agent>
+	<Agent name="GolfLoungMemberAgent" date="0000.00.00"  time="08:00:00">com.bccard.golf.action.admin.member.GolfLoungMemAgent</Agent> 
+	<Agent name="GolfLoungUseAmtAgent" date="0000.00.00"  time="19:00:00">com.bccard.golf.action.admin.member.GolfLoungUseAmtAgent</Agent>
+	-->
+	
+	<!-- 전문 Type -->
+	<Resource type="code" scope="service">
+	    <Config>SELECT SITE_CLSS, PGM_NM, TRNM_CLSS FROM BCDBA.TBPSTCCVRS WHERE SITE_CLSS='10'</Config>
+	    <Property key="factory">com.bccard.golf.factory.GolfDbConnectionFactory</Property>	    
+		<Property key="codeKeyField">SITE_CLSS</Property>
+		<Property key="codeCodeField">PGM_NM</Property>
+		<Property key="codeDetailField">TRNM_CLSS</Property>
+	</Resource>
+
+	<!-- 사용자 정의 리소스 시작 -->
+	<Vallidate key="FORM_ERROR_MSG_HEADER">입력 오류</Vallidate>
+	<Vallidate key="FORM_ERROR_MSG_NUMBER">유효한 숫자가 아닙니다.</Vallidate>
+	<Vallidate key="FORM_ERROR_MSG_DATE">유효한 날짜가 아닙니다.</Vallidate>
+	<Vallidate key="FORM_ERROR_MSG_DATE_FORMAT">입력 가능한 날짜 형식이 아닙니다.</Vallidate>
+	<Vallidate key="FORM_ERROR_MSG_MAX_LENGTH">입력 가능한 길이를 넘었습니다.</Vallidate>
+	<Vallidate key="FORM_BGCOLOR_DEFAULT">#FFFFFF</Vallidate>
+	<Vallidate key="FORM_BGCOLOR_FOCUS">#FFF2DA</Vallidate>
+	<Vallidate key="FORM_BGCOLOR_LOCK">#C0C0C0</Vallidate>
+	
+</ControllerServlet>
+

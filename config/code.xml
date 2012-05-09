@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="euc-kr"?>
+<resource>
+	
+	<codeset key="REP_MB_NO">
+		<code code="03" middle ="기업은행" alias ="기업">기업은행</code>
+		<code code="04" middle ="국민은행" alias ="국민">국민은행</code>
+		<code code="11" middle ="농협" alias ="농협">농협</code>
+		<code code="20" middle ="우리은행" alias ="우리">우리은행</code>
+		<code code="21" middle ="조흥은행" alias ="조흥">조흥은행</code>
+		<code code="23" middle ="SC은행" alias ="SC">SC은행</code>
+		<code code="27" middle ="한미은행" alias ="한미">한미은행</code>
+		<code code="31" middle ="대구은행" alias ="대구">대구은행</code>
+		<code code="32" middle ="부산은행" alias ="부산">부산은행</code>
+		<code code="39" middle ="경남은행" alias ="경남">경남은행</code>
+		<code code="50" middle ="비씨카드" alias ="비씨">비씨카드</code>
+		<code code="81" middle ="하나은행" alias ="하나">하나은행</code>
+	</codeset>	
+	
+</resource>

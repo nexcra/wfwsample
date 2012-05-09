@@ -1,0 +1,87 @@
+<?xml version="1.0" encoding="EUC-KR" ?>
+<!DOCTYPE taglib
+	PUBLIC "-//Sun Microsystems, Inc.//DTD JSP Tag Library 1.1//EN"
+	"http://java.sun.com/j2ee/dtds/web-jsptaglib_1_1.dtd">
+
+<taglib>
+	<tlibversion>1.0</tlibversion>
+	<jspversion>1.1</jspversion>
+	<shortname>watrix</shortname>
+	<uri/>
+	<info>com.bccard.golf 에서 사용하는 커스텀 태그</info>
+	
+<!-- 메시지 시작 --> 
+	<tag>
+		<name>msg</name>
+		<tagclass>com.bccard.golf.msg.MsgTag</tagclass>
+		<bodycontent>JSP</bodycontent>
+		<info>메시지표시</info>
+		<attribute><name>type</name><required>false</required><rtexprvalue>true</rtexprvalue></attribute>
+		<attribute><name>title</name><required>false</required><rtexprvalue>true</rtexprvalue></attribute>
+		<attribute><name>key</name><required>false</required><rtexprvalue>true</rtexprvalue></attribute>
+		<attribute><name>arg1</name><required>false</required><rtexprvalue>true</rtexprvalue></attribute>
+		<attribute><name>arg2</name><required>false</required><rtexprvalue>true</rtexprvalue></attribute>
+		<attribute><name>arg3</name><required>false</required><rtexprvalue>true</rtexprvalue></attribute>
+		<attribute><name>arg4</name><required>false</required><rtexprvalue>true</rtexprvalue></attribute>
+		<attribute><name>msgAttrName</name><required>false</required><rtexprvalue>true</rtexprvalue></attribute>
+		<attribute><name>msgHandlerAttrName</name><required>false</required><rtexprvalue>true</rtexprvalue></attribute>
+	</tag>
+	<tag>
+		<name>msgContents</name>
+		<tagclass>com.bccard.golf.msg.MsgContentsTag</tagclass>
+		<bodycontent>JSP</bodycontent>
+		<info>메시지컨텐츠</info>
+	</tag>
+	<tag>
+		<name>msgEvent</name>
+		<tagclass>com.bccard.golf.msg.MsgEventTag</tagclass>
+		<bodycontent>EMPTY</bodycontent>
+		<info>메시지표시</info>
+		<attribute><name>href</name><required>true</required><rtexprvalue>true</rtexprvalue></attribute>
+		<attribute><name>src</name><required>true</required><rtexprvalue>true</rtexprvalue></attribute>
+	</tag>
+	<!-- 페이징 시작 -->
+	<tag>
+		<name>paging</name>
+		<tagclass>com.bccard.golf.tag.PagingTag</tagclass>
+		<bodycontent>JSP</bodycontent>
+		<info>메시지표시</info>
+		<attribute><name>onclick</name><required>true</required><rtexprvalue>true</rtexprvalue></attribute>
+		<attribute><name>blockSize</name><required>false</required><rtexprvalue>true</rtexprvalue></attribute>
+		<attribute><name>recordSize</name><required>false</required><rtexprvalue>true</rtexprvalue></attribute>
+		<attribute><name>total</name><required>false</required><rtexprvalue>true</rtexprvalue></attribute>
+		<attribute><name>currpage</name><required>false</required><rtexprvalue>true</rtexprvalue></attribute>
+		<attribute><name>contents</name><required>false</required><rtexprvalue>true</rtexprvalue></attribute>
+		<attribute><name>first</name><required>false</required><rtexprvalue>true</rtexprvalue></attribute>
+		<attribute><name>last</name><required>false</required><rtexprvalue>true</rtexprvalue></attribute>
+		<attribute><name>back</name><required>false</required><rtexprvalue>true</rtexprvalue></attribute>
+		<attribute><name>next</name><required>false</required><rtexprvalue>true</rtexprvalue></attribute>
+		<attribute><name>backblock</name><required>false</required><rtexprvalue>true</rtexprvalue></attribute>
+		<attribute><name>nextblock</name><required>false</required><rtexprvalue>true</rtexprvalue></attribute>
+	</tag>
+	<tag>
+		<name>pagingParam</name>
+		<tagclass>com.bccard.golf.tag.PagingParamTag</tagclass>
+		<bodycontent>JSP</bodycontent>
+		<info>메시지표시</info>
+		<attribute><name>param</name><required>true</required><rtexprvalue>true</rtexprvalue></attribute>
+		<attribute><name>value</name><required>false</required><rtexprvalue>true</rtexprvalue></attribute>
+		<attribute><name>datasrc</name><required>false</required><rtexprvalue>true</rtexprvalue></attribute>
+		<attribute><name>datafld</name><required>false</required><rtexprvalue>true</rtexprvalue></attribute>
+	</tag>
+	<!-- 페이징 끝 -->
+	<!-- 메시지 끝 -->
+	<tag>
+		<name>getParameter</name>
+		<tagclass>com.bccard.golf.tag.GetParameterTag</tagclass>
+		<teiclass>com.bccard.golf.tag.VarSupportTei</teiclass>
+		<bodycontent>EMPTY</bodycontent>
+		<info>	</info>
+		<attribute><name>var</name><required>true</required><rtexprvalue>true</rtexprvalue></attribute>
+		<attribute><name>type</name><required>true</required><rtexprvalue>true</rtexprvalue></attribute>
+		<attribute><name>param</name><required>true</required><rtexprvalue>true</rtexprvalue></attribute>
+		<attribute><name>def</name><required>false</required><rtexprvalue>true</rtexprvalue></attribute>
+		<attribute><name>factory</name><required>false</required><rtexprvalue>true</rtexprvalue></attribute>
+	</tag>
+
+</taglib>	
